@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { BrandLogo } from "./BrandLogo";
 import { BrewTimer } from "./BrewTimer";
+import { BrewPreviewGallery } from "./BrewPreviewGallery";
 import { ResilientImage } from "./ResilientImage";
 import { ShoppingListPanel } from "./ShoppingListPanel";
 import { copyTextToClipboard, formatEmojiRecipeSummary } from "../utils/copyRecipe";
@@ -37,18 +38,18 @@ interface CraftingStudioProps {
   onResetPreferences: () => void;
   recipe: CraftedRecipe;
   isCrafting: boolean;
-  craftError: string | null;
+  canPreviewLocalBrews: boolean;
+  localBrewPreviews: CraftedRecipe[];
+  onSelectLocalBrew: (recipe: CraftedRecipe) => void;
   onCraft: () => void;
   isSaved: boolean;
   onSaveRecipe: () => void;
   visualData: { imageUrl: string; vesselDescription: string } | null;
   isVisualizing: boolean;
-  visualizeError: string | null;
   onVisualizeBrew: () => void;
   onClearVisual: () => void;
   chatMessages: ChatMessage[];
   isChatting: boolean;
-  chatError: string | null;
   onSendChat: (messageText: string) => void;
   chatInputRef: RefObject<HTMLInputElement | null>;
   t: AppTranslations;
@@ -60,18 +61,18 @@ export function CraftingStudio({
   onResetPreferences,
   recipe,
   isCrafting,
-  craftError,
+  canPreviewLocalBrews,
+  localBrewPreviews,
+  onSelectLocalBrew,
   onCraft,
   isSaved,
   onSaveRecipe,
   visualData,
   isVisualizing,
-  visualizeError,
   onVisualizeBrew,
   onClearVisual,
   chatMessages,
   isChatting,
-  chatError,
   onSendChat,
   chatInputRef,
   t,
@@ -79,6 +80,7 @@ export function CraftingStudio({
   const [chatDraft, setChatDraft] = useState("");
   const [isTimerOpen, setIsTimerOpen] = useState(false);
   const [isShoppingListOpen, setIsShoppingListOpen] = useState(false);
+  const [isLocalPreviewOpen, setIsLocalPreviewOpen] = useState(false);
   const [timerSessionKey, setTimerSessionKey] = useState("init");
   const [copiedRecipe, setCopiedRecipe] = useState(false);
 
@@ -281,6 +283,7 @@ export function CraftingStudio({
                   </select>
                 </div>
               </div>
+
             </div>
 
             {/* Step 3: Origin, Roast & Milk */}
@@ -391,13 +394,26 @@ export function CraftingStudio({
               </div>
             </div>
 
-            {craftError && (
+            {canPreviewLocalBrews && (
               <div
-                role="alert"
-                className="mb-4 p-3.5 rounded-lg bg-[#FEF2F2] dark:bg-[#450A0A]/50 border border-[#DC2626]/20 dark:border-[#F87171]/30 text-xs text-[#991B1B] dark:text-[#FCA5A5]"
+                role="status"
+                aria-live="polite"
+                className="mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-lg bg-[#EFE9DC] dark:bg-[#26221E] border border-[#191614]/10 dark:border-white/10"
               >
-                <p className="font-semibold">{t.studio.craftErrorTitle}</p>
-                <p className="mt-1">{craftError}</p>
+                <p className="text-xs leading-relaxed text-[#5C534A] dark:text-[#B8AFA4]">
+                  {t.studio.localPreviewNotice}
+                </p>
+                <button
+                  type="button"
+                  aria-expanded={isLocalPreviewOpen}
+                  aria-controls="local-brew-previews"
+                  onClick={() => setIsLocalPreviewOpen((open) => !open)}
+                  className="inline-flex min-h-10 shrink-0 items-center justify-center rounded-lg border border-[#191614]/15 dark:border-white/15 px-3 py-2 text-xs font-semibold text-[#191614] dark:text-[#F5F0E6] hover:bg-white/70 dark:hover:bg-[#3A332B] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A62C1B] dark:focus-visible:ring-[#F59E0B] cursor-pointer"
+                >
+                  {isLocalPreviewOpen
+                    ? t.studio.hideLocalPreviews
+                    : t.studio.previewLocalBrews}
+                </button>
               </div>
             )}
 
@@ -545,15 +561,6 @@ export function CraftingStudio({
                 </button>
               </div>
             </div>
-
-            {visualizeError && (
-              <div
-                role="alert"
-                className="mt-5 p-3.5 rounded-lg bg-[#FEF2F2] dark:bg-[#450A0A]/50 border border-[#DC2626]/20 dark:border-[#F87171]/30 text-xs text-[#991B1B] dark:text-[#FCA5A5]"
-              >
-                {visualizeError}
-              </div>
-            )}
 
             {visualData && (
               <div className="mt-5 bg-[#F8F5EE] dark:bg-[#26221E] border border-[#191614]/10 dark:border-white/10 rounded-xl overflow-hidden">
@@ -812,15 +819,6 @@ export function CraftingStudio({
                 </div>
               )}
 
-              {chatError && (
-                <div
-                  role="alert"
-                  className="mb-3 p-3 rounded-lg bg-[#FEF2F2] dark:bg-[#450A0A]/50 border border-[#DC2626]/20 dark:border-[#F87171]/30 text-xs text-[#991B1B] dark:text-[#FCA5A5]"
-                >
-                  {chatError}
-                </div>
-              )}
-
               <form onSubmit={handleChatSubmit} className="flex gap-2">
                 <input
                   ref={chatInputRef}
@@ -843,6 +841,18 @@ export function CraftingStudio({
             </div>
           </div>
         </div>
+
+        {canPreviewLocalBrews && isLocalPreviewOpen && (
+          <BrewPreviewGallery
+            previews={localBrewPreviews}
+            selectedMethod={preferences.brewMethod}
+            onSelect={(preview) => {
+              onSelectLocalBrew(preview);
+              setIsLocalPreviewOpen(false);
+            }}
+            t={t.studio}
+          />
+        )}
       </div>
     </section>
   );

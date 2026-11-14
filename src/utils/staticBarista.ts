@@ -1,5 +1,6 @@
 import { LanguageCode } from "../i18n/translations";
 import { CraftPreferences, CraftedRecipe } from "../types/coffee";
+import { ORIGIN_LOTS } from "../data/pantry";
 
 /**
  * Local barista craft engine used solely as a fallback when the app is hosted
@@ -26,6 +27,7 @@ export function craftStaticRecipe(
 
   const isIced = prefs.servingTemp === "Iced";
   const method = prefs.brewMethod || "Flat White";
+  const isCold = method.toLowerCase().includes("cold");
   const milkChoice =
     prefs.selectedMilk !== "Barista Choice"
       ? prefs.selectedMilk
@@ -47,63 +49,46 @@ export function craftStaticRecipe(
       ? "Light Nordic"
       : "Medium Balanced";
 
-  const bean = wantsDarkCozy
-    ? {
-        name:
-          prefs.selectedOrigin !== "Barista Choice"
-            ? prefs.selectedOrigin
-            : "Carmo Estate Velvet",
-        origin: "Brazil & Sumatra",
-        region: "Sul de Minas / Lintong",
-        process: "Natural & Wet-Hulled",
-        varietal: "Yellow Bourbon",
-        elevation: "1,350m",
-        whyItFits:
-          "Low-acid natural and wet-hulled lots unlock heavy baker's chocolate and toasted nut sweetness with zero sourness.",
-      }
+  const defaultLotId = wantsDarkCozy
+    ? "brazil-sul-de-minas"
     : wantsBright
-    ? {
-        name:
-          prefs.selectedOrigin !== "Barista Choice"
-            ? prefs.selectedOrigin
-            : "Worka Sakaro Reserve",
-        origin: "Ethiopia",
-        region: "Gedeb, Yirgacheffe",
-        process: "Washed",
-        varietal: "74110 & 74112",
-        elevation: "2,150m",
-        whyItFits:
-          "High-elevation washed beans deliver jasmine aromatics, stone-fruit clarity, and clean tea-like sweetness.",
-      }
-    : {
-        name:
-          prefs.selectedOrigin !== "Barista Choice"
-            ? prefs.selectedOrigin
-            : "Finca El Paraíso Caturra",
-        origin: "Colombia",
-        region: "San Agustín, Huila",
-        process: "Honey Process",
-        varietal: "Pink Bourbon & Caturra",
-        elevation: "1,850m",
-        whyItFits:
-          "Honey processing concentrates natural sugars for balanced caramel, milk chocolate, and roasted hazelnut depth.",
-      };
+      ? "ethiopia-worka"
+      : "colombia-huila";
+  const beanLot =
+    ORIGIN_LOTS.find(
+      (lot) => prefs.selectedOrigin === `${lot.origin} — ${lot.name}`
+    ) ?? ORIGIN_LOTS.find((lot) => lot.id === defaultLotId);
+  if (!beanLot) {
+    throw new Error(`No origin lot matches the brew preferences.`);
+  }
+  const bean = {
+    name: beanLot.name,
+    origin: beanLot.origin,
+    region: beanLot.region,
+    process: beanLot.process,
+    varietal: beanLot.varietal,
+    elevation: beanLot.elevation,
+    whyItFits: beanLot.description,
+  };
 
   const isPourOver = method.toLowerCase().includes("pour");
   const isAero = method.toLowerCase().includes("aero");
-  const isCold = method.toLowerCase().includes("cold");
 
   const doseGrams = isPourOver ? 16 : isAero ? 17 : isCold ? 45 : 19;
+  const isLightBody = prefs.bodyPreference === "Light & Tea-Like";
+  const isBoldBody = prefs.bodyPreference === "Syrupy & Bold";
+  const filterRatio = isLightBody ? 17 : isBoldBody ? 14 : 16;
+  const aeroRatio = isLightBody ? 14 : isBoldBody ? 12 : 13;
+  const coldBrewRatio = isLightBody ? 9 : isBoldBody ? 7 : 8;
+  const espressoRatio = isLightBody ? 2 : isBoldBody ? 1.6 : 1.8;
   const waterOrYieldMl = isPourOver
-    ? 256
+    ? Math.round(doseGrams * filterRatio)
     : isAero
-    ? 220
+    ? Math.round(doseGrams * aeroRatio)
     : isCold
-    ? 360
-    : wantsDarkCozy
-    ? 32
-    : 38;
-  const waterTempC = wantsDarkCozy ? 90 : wantsBright ? 95 : 93;
+      ? Math.round(doseGrams * coldBrewRatio)
+      : Math.round(doseGrams * espressoRatio);
+  const waterTempC = isCold ? 20 : wantsDarkCozy ? 90 : wantsBright ? 95 : 93;
 
   return {
     title: `${isIced ? "Iced " : ""}${
@@ -114,6 +99,8 @@ export function craftStaticRecipe(
         ? `Abgestimmt auf ${prefs.flavors.join(", ") || "ausgewogene"} Aromen bei ${waterTempC}°C Brühtemperatur mit ${roastLevel} und ${milkChoice}.`
         : language === "te"
         ? `${prefs.flavors.join(", ") || "సమతుల్య"} రుచుల కోసం ${waterTempC}°C నీటి ఉష్ణోగ్రతతో ${roastLevel} మరియు ${milkChoice} తో ప్రత్యేకంగా సిద్ధం చేసిన రెసిపీ.`
+        : isCold
+        ? `Steep ${doseGrams}g coarse coffee in ${waterOrYieldMl}ml cool water for 14 hours, then filter and serve ${isIced ? "over ice" : "diluted with hot water"}.`
         : wantsDarkCozy
         ? `Dialed for rich chocolaty and nutty warmth without harsh bitterness—lowering brew temperature to ${waterTempC}°C and keeping a tight extraction suppresses bitter compounds while highlighting cocoa and toasted nuts.`
         : `Calibrated around your ${
@@ -146,7 +133,13 @@ export function craftStaticRecipe(
       servingTemp: prefs.servingTemp,
       doseGrams,
       waterOrYieldMl,
-      ratio: isPourOver ? "1:16" : isAero ? "1:13" : isCold ? "1:8 concentrate" : "1:1.8",
+      ratio: isPourOver
+        ? `1:${filterRatio}`
+        : isAero
+          ? `1:${aeroRatio}`
+          : isCold
+            ? `1:${coldBrewRatio} concentrate`
+            : `1:${espressoRatio}`,
       waterTempC: isCold ? 20 : waterTempC,
       grindSetting: isPourOver
         ? "Medium-fine (650 microns)"
@@ -156,7 +149,19 @@ export function craftStaticRecipe(
         ? "Coarse (1,000 microns)"
         : "Fine espresso (230 microns)",
       brewTime: isPourOver ? "2:45" : isAero ? "2:00" : isCold ? "14h steep" : "28s",
-      steps: isPourOver
+      steps: isCold
+        ? [
+            `Combine ${doseGrams}g coarse coffee with ${waterOrYieldMl}ml cool filtered water and steep covered in the refrigerator for 14 hours.`,
+            isIced
+              ? "Filter the concentrate and pour over ice."
+              : "Filter the concentrate and dilute with hot water to taste.",
+            hasMilk
+              ? isIced
+                ? `Add chilled ${milkChoice} to taste.`
+                : `Add steamed ${milkChoice} to taste.`
+              : "Adjust dilution to taste.",
+          ]
+        : isPourOver
         ? [
             `Bloom ${doseGrams}g grounds with ${doseGrams * 2}ml water at ${waterTempC}°C for 35 seconds.`,
             `Pour steadily in slow concentric spirals to reach ${waterOrYieldMl}ml total water.`,
@@ -171,7 +176,20 @@ export function craftStaticRecipe(
               : "Swirl gently to integrate crema and aromatics.",
             "Serve immediately and enjoy warm.",
           ],
-      timerPhases: isPourOver
+      timerPhases: isCold
+        ? [
+            {
+              label: "Saturate Grounds",
+              durationSeconds: 30,
+              instruction: `Stir ${doseGrams}g coarse grounds into ${waterOrYieldMl}ml cool filtered water.`,
+            },
+            {
+              label: "Cover & Refrigerate",
+              durationSeconds: 30,
+              instruction: "Cover and refrigerate for 14 hours, then filter and serve over ice.",
+            },
+          ]
+        : isPourOver
         ? [
             {
               label: "Bloom",
@@ -218,10 +236,27 @@ export function craftStaticRecipe(
       : wantsBright
       ? ["Bergamot", "White Peach", "Jasmine", "Honey"]
       : ["Milk Chocolate", "Roasted Hazelnut", "Caramel", "Sweet Almond"],
-    proTip: wantsDarkCozy
+    proTip: isCold
+      ? `Steep covered in the refrigerator for 14 hours, then filter and serve ${isIced ? "over fresh ice" : "diluted with hot water"}.`
+      : wantsDarkCozy
       ? "Keep brew water at 90°C and stop the shot slightly early—this gives maximum body and zero harsh bitterness."
       : "Use filtered water with gentle mineral balance so sweetness stays crisp and clean.",
   };
+}
+
+export function createStaticBrewPreviews(
+  prefs: CraftPreferences,
+  methods: readonly string[],
+  language: LanguageCode = "en"
+): CraftedRecipe[] {
+  const orderedMethods = [
+    prefs.brewMethod,
+    ...methods.filter((method) => method !== prefs.brewMethod),
+  ];
+
+  return orderedMethods.map((brewMethod) =>
+    craftStaticRecipe({ ...prefs, brewMethod }, language)
+  );
 }
 
 export function chatStaticBarista(

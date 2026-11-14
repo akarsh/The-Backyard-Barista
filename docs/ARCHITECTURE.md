@@ -8,7 +8,7 @@ The interactive system map is a developer-mode view, available at `/?developer=1
 
 ## 1. End-to-End Request & Fallback Flow
 
-When you click **Craft My Cup**, **Visualize Brew**, or send a message to **Milo**, the browser calls `/api/barista/*`. If deployed on GitHub Pages (no Node backend), the `404`/`405` or network fallback automatically routes to the local static barista engine.
+When you click **Craft My Cup**, **Visualize Brew**, or send a message to **Milo**, the browser calls `/api/barista/*`. If deployed on GitHub Pages (no Node backend), a `404`/`405` or network failure falls back to the local static barista engine. If the server is available but Gemini fails, technical errors stay out of the UI: craft offers settings-based local brew previews, visualization uses original local SVG artwork, and chat uses the deterministic local barista reply.
 
 ```mermaid
 flowchart LR
@@ -19,6 +19,9 @@ flowchart LR
 
     CHECK -->|"No (404/405 on github.io)"| STATIC["Static Barista Engine\n(src/utils/staticBarista.ts)"]
     STATIC --> SHEET
+
+    GEMINI -->|"Craft unavailable"| PREVIEWS["Optional Local Brew Gallery\n(all configured methods, no Gemini)"]
+    PREVIEWS --> SHEET
 
     SHEET --> TIMER["Phased Brew Timer"]
     SHEET --> LIST["Shopping & Gear List"]

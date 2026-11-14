@@ -12,11 +12,7 @@ import { RecipeJournalSection } from "./components/RecipeJournalSection";
 import { SavedBrewsDrawer } from "./components/SavedBrewsDrawer";
 import { useLanguage } from "./hooks/useLanguage";
 import { useTheme } from "./hooks/useTheme";
-import {
-  HERO_IMAGE_URL,
-  INITIAL_RECIPE,
-  MILK_FEATURE_IMAGE_URL,
-} from "./data/pantry";
+import { BREW_METHODS, INITIAL_RECIPE } from "./data/pantry";
 import {
   ChatMessage,
   CraftPreferences,
@@ -38,7 +34,12 @@ import {
   sanitizeRepoJournalFile,
   validateIdentifier,
 } from "./utils/security";
-import { chatStaticBarista, craftStaticRecipe } from "./utils/staticBarista";
+import {
+  chatStaticBarista,
+  createStaticBrewPreviews,
+  craftStaticRecipe,
+} from "./utils/staticBarista";
+import { getBrewPreviewImageUrl } from "./utils/brewPreviewImage";
 
 const USER_STORAGE_KEY = "sable_origin_journal_user_v1";
 const LOCAL_JOURNAL_STORAGE_KEY = "sable_origin_local_journal_v1";
@@ -64,18 +65,16 @@ export default function App() {
     useState<CraftPreferences>(DEFAULT_PREFERENCES);
   const [recipe, setRecipe] = useState<CraftedRecipe>(INITIAL_RECIPE);
   const [isCrafting, setIsCrafting] = useState(false);
-  const [craftError, setCraftError] = useState<string | null>(null);
+  const [canPreviewLocalBrews, setCanPreviewLocalBrews] = useState(false);
 
   const [visualData, setVisualData] = useState<{
     imageUrl: string;
     vesselDescription: string;
   } | null>(null);
   const [isVisualizing, setIsVisualizing] = useState(false);
-  const [visualizeError, setVisualizeError] = useState<string | null>(null);
 
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [isChatting, setIsChatting] = useState(false);
-  const [chatError, setChatError] = useState<string | null>(null);
 
   // Passwordless user management (hashed identifier, zero raw PII persisted in repo JSON)
   const [currentUser, setCurrentUser] = useState<JournalUser | null>(() => {
@@ -115,6 +114,10 @@ export default function App() {
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const chatInputRef = useRef<HTMLInputElement | null>(null);
+  const localBrewPreviews = useMemo(
+    () => createStaticBrewPreviews(preferences, BREW_METHODS, language),
+    [preferences, language]
+  );
 
   // Load static repository JSON database on mount (works on github.io & Express)
   useEffect(() => {
@@ -179,11 +182,28 @@ export default function App() {
     }
   };
 
+  const applyStaticRecipe = (prefs: CraftPreferences) => {
+    const staticRecipe = craftStaticRecipe(prefs, language);
+    setRecipe(staticRecipe);
+    setCanPreviewLocalBrews(true);
+    setChatMessages([
+      {
+        id: `milo-${Date.now()}`,
+        role: "model",
+        text:
+          language === "de"
+            ? `Ich habe „${staticRecipe.title}“ für dich abgestimmt. Möchtest du die Milch wechseln, eine Iced-Variante zubereiten oder den Mahlgrad anpassen?`
+            : language === "te"
+              ? `మీ కోసం "${staticRecipe.title}" రెసిపీని సిద్ధం చేశాను. పాలు మార్చాలా, ఐస్డ్ వేరియంట్ కావాలా లేదా గ్రైండ్ సైజును సర్దుబాటు చేయాలా?`
+              : `Just dialed in "${staticRecipe.title}" for you. Want me to adjust the milk, switch it over ice, or tweak the grind?`,
+      },
+    ]);
+  };
+
   const runCraftRequest = async (prefs: CraftPreferences) => {
     setIsCrafting(true);
-    setCraftError(null);
+    setCanPreviewLocalBrews(false);
     setVisualData(null);
-    setVisualizeError(null);
     try {
       const response = await fetch("/api/barista/craft", {
         method: "POST",
@@ -191,22 +211,8 @@ export default function App() {
         body: JSON.stringify({ ...prefs, language }),
       });
 
-      // Static hosting fallback (GitHub Pages / github.io where no Node API exists)
       if (response.status === 404 || response.status === 405) {
-        const staticRecipe = craftStaticRecipe(prefs, language);
-        setRecipe(staticRecipe);
-        setChatMessages([
-          {
-            id: `milo-${Date.now()}`,
-            role: "model",
-            text:
-              language === "de"
-                ? `Ich habe „${staticRecipe.title}“ für dich abgestimmt. Möchtest du die Milch wechseln, eine Iced-Variante zubereiten oder den Mahlgrad anpassen?`
-                : language === "te"
-                ? `మీ కోసం "${staticRecipe.title}" రెసిపీని సిద్ధం చేశాను. పాలు మార్చాలా, ఐస్డ్ వేరియంట్ కావాలా లేదా గ్రైండ్ సైజును సర్దుబాటు చేయాలా?`
-                : `Just dialed in "${staticRecipe.title}" for you. Want me to adjust the milk, switch it over ice, or tweak the grind?`,
-          },
-        ]);
+        applyStaticRecipe(prefs);
         return;
       }
 
@@ -216,48 +222,50 @@ export default function App() {
           data.error || "Could not generate coffee recommendation."
         );
       }
-      if (data.recipe) {
-        setRecipe(data.recipe);
-        setChatMessages([
-          {
-            id: `milo-${Date.now()}`,
-            role: "model",
-            text:
-              language === "de"
-                ? `Ich habe „${data.recipe.title}“ für dich abgestimmt. Möchtest du die Milch wechseln, eine Iced-Variante zubereiten oder den Mahlgrad für dein Setup anpassen?`
-                : language === "te"
+      if (!data.recipe) {
+        throw new Error("The barista service returned no recipe.");
+      }
+      setRecipe(data.recipe);
+      setChatMessages([
+        {
+          id: `milo-${Date.now()}`,
+          role: "model",
+          text:
+            language === "de"
+              ? `Ich habe „${data.recipe.title}“ für dich abgestimmt. Möchtest du die Milch wechseln, eine Iced-Variante zubereiten oder den Mahlgrad für dein Setup anpassen?`
+              : language === "te"
                 ? `మీ కోసం "${data.recipe.title}" రెసిపీని సిద్ధం చేశాను. పాలు మార్చాలా, ఐస్డ్ వేరియంట్ కావాలా లేదా మీ హోమ్ సెటప్ కోసం గ్రైండ్ సైజును సర్దుబాటు చేయాలా?`
                 : `Just dialed in "${data.recipe.title}" for you. Want me to adjust the milk, switch it over ice, or tweak the grind for your home setup?`,
-          },
-        ]);
-      }
-    } catch (err) {
-      // Network failure on pure static hosts falls back cleanly
-      if (err instanceof TypeError) {
-        const staticRecipe = craftStaticRecipe(prefs, language);
-        setRecipe(staticRecipe);
-        setChatMessages([
-          {
-            id: `milo-${Date.now()}`,
-            role: "model",
-            text:
-              language === "de"
-                ? `Ich habe „${staticRecipe.title}“ für dich abgestimmt. Möchtest du die Milch wechseln, eine Iced-Variante zubereiten oder den Mahlgrad anpassen?`
-                : language === "te"
-                ? `మీ కోసం "${staticRecipe.title}" రెసిపీని సిద్ధం చేశాను. పాలు మార్చాలా, ఐస్డ్ వేరియంట్ కావాలా లేదా గ్రైండ్ సైజును సర్దుబాటు చేయాలా?`
-                : `Just dialed in "${staticRecipe.title}" for you. Want me to adjust the milk, switch it over ice, or tweak the grind?`,
-          },
-        ]);
+        },
+      ]);
+    } catch (error) {
+      if (error instanceof TypeError) {
+        console.error("Barista craft request failed; using the local recipe.");
+        applyStaticRecipe(prefs);
         return;
       }
-      setCraftError(
-        err instanceof Error
-          ? err.message
-          : "Something went wrong reaching the barista."
-      );
+      console.error("Barista craft request failed; local previews are available.");
+      setCanPreviewLocalBrews(true);
     } finally {
       setIsCrafting(false);
     }
+  };
+
+  const appendStaticChatReply = (messageText: string) => {
+    const staticReply = chatStaticBarista(messageText, recipe, language);
+    if (staticReply.shouldUpdateRecipe && staticReply.updatedRecipe) {
+      setRecipe(staticReply.updatedRecipe);
+      setVisualData(null);
+    }
+    setChatMessages((prev) => [
+      ...prev,
+      {
+        id: `model-${Date.now()}`,
+        role: "model",
+        text: staticReply.reply,
+        recipeUpdated: staticReply.shouldUpdateRecipe,
+      },
+    ]);
   };
 
   const handleSendChat = async (messageText: string) => {
@@ -269,7 +277,6 @@ export default function App() {
     const nextHistory = [...chatMessages, userMsg];
     setChatMessages(nextHistory);
     setIsChatting(true);
-    setChatError(null);
 
     try {
       const response = await fetch("/api/barista/chat", {
@@ -283,20 +290,8 @@ export default function App() {
       });
 
       if (response.status === 404 || response.status === 405) {
-        const staticReply = chatStaticBarista(messageText, recipe, language);
-        if (staticReply.shouldUpdateRecipe && staticReply.updatedRecipe) {
-          setRecipe(staticReply.updatedRecipe);
-          setVisualData(null);
-        }
-        setChatMessages((prev) => [
-          ...prev,
-          {
-            id: `model-${Date.now()}`,
-            role: "model",
-            text: staticReply.reply,
-            recipeUpdated: staticReply.shouldUpdateRecipe,
-          },
-        ]);
+        setCanPreviewLocalBrews(true);
+        appendStaticChatReply(messageText);
         return;
       }
 
@@ -317,34 +312,24 @@ export default function App() {
         recipeUpdated: Boolean(data.shouldUpdateRecipe && data.updatedRecipe),
       };
       setChatMessages((prev) => [...prev, modelMsg]);
-    } catch (err) {
-      if (err instanceof TypeError) {
-        const staticReply = chatStaticBarista(messageText, recipe, language);
-        if (staticReply.shouldUpdateRecipe && staticReply.updatedRecipe) {
-          setRecipe(staticReply.updatedRecipe);
-        }
-        setChatMessages((prev) => [
-          ...prev,
-          {
-            id: `model-${Date.now()}`,
-            role: "model",
-            text: staticReply.reply,
-            recipeUpdated: staticReply.shouldUpdateRecipe,
-          },
-        ]);
-        return;
-      }
-      setChatError(
-        err instanceof Error ? err.message : "Failed to send message to barista."
-      );
+    } catch {
+      console.error("Barista chat request failed; using a local reply.");
+      setCanPreviewLocalBrews(true);
+      appendStaticChatReply(messageText);
     } finally {
       setIsChatting(false);
     }
   };
 
+  const showLocalBrewArt = () => {
+    setVisualData({
+      imageUrl: getBrewPreviewImageUrl(recipe.brewRecipe.method),
+      vesselDescription: recipe.brewRecipe.method,
+    });
+  };
+
   const handleVisualizeBrew = async () => {
     setIsVisualizing(true);
-    setVisualizeError(null);
     try {
       const response = await fetch("/api/barista/visualize", {
         method: "POST",
@@ -353,15 +338,8 @@ export default function App() {
       });
 
       if (response.status === 404 || response.status === 405) {
-        const hasMilk =
-          !recipe.milkPairing.name.toLowerCase().includes("black") &&
-          !recipe.milkPairing.name.toLowerCase().includes("no milk");
-        setVisualData({
-          imageUrl: hasMilk ? MILK_FEATURE_IMAGE_URL : HERO_IMAGE_URL,
-          vesselDescription: hasMilk
-            ? "speckled stoneware cup"
-            : "glass pour-over server",
-        });
+        setCanPreviewLocalBrews(true);
+        showLocalBrewArt();
         return;
       }
 
@@ -369,18 +347,17 @@ export default function App() {
       if (!response.ok) {
         throw new Error(data.error || "Could not visualize this brew.");
       }
-      if (data.imageDataUrl) {
-        setVisualData({
-          imageUrl: data.imageDataUrl,
-          vesselDescription: data.vesselDescription || "specialty vessel",
-        });
+      if (!data.imageDataUrl) {
+        throw new Error("The barista service returned no brew image.");
       }
-    } catch (err) {
-      setVisualizeError(
-        err instanceof Error
-          ? err.message
-          : "Unable to render a visual preview for this brew right now."
-      );
+      setVisualData({
+        imageUrl: data.imageDataUrl,
+        vesselDescription: data.vesselDescription || "specialty vessel",
+      });
+    } catch {
+      console.error("Brew visualization failed; using local artwork.");
+      setCanPreviewLocalBrews(true);
+      showLocalBrewArt();
     } finally {
       setIsVisualizing(false);
     }
@@ -512,6 +489,24 @@ export default function App() {
     setTimeout(() => chatInputRef.current?.focus(), 350);
   };
 
+  const handleSelectLocalBrew = (nextRecipe: CraftedRecipe) => {
+    setRecipe(nextRecipe);
+    setPreferences((current) => ({
+      ...current,
+      brewMethod: nextRecipe.brewRecipe.method,
+    }));
+    setCanPreviewLocalBrews(true);
+    setVisualData(null);
+    setChatMessages((current) => [
+      ...current,
+      {
+        id: `milo-${Date.now()}`,
+        role: "model",
+        text: t.studio.localPreviewApplied,
+      },
+    ]);
+  };
+
   const handleSelectOriginLot = (lot: OriginLot) => {
     const nextPrefs: CraftPreferences = {
       ...preferences,
@@ -569,18 +564,18 @@ export default function App() {
           onResetPreferences={() => setPreferences(DEFAULT_PREFERENCES)}
           recipe={recipe}
           isCrafting={isCrafting}
-          craftError={craftError}
+          canPreviewLocalBrews={canPreviewLocalBrews}
+          localBrewPreviews={localBrewPreviews}
+          onSelectLocalBrew={handleSelectLocalBrew}
           onCraft={() => runCraftRequest(preferences)}
           isSaved={isCurrentRecipeSaved}
           onSaveRecipe={handleSaveToJournal}
           visualData={visualData}
           isVisualizing={isVisualizing}
-          visualizeError={visualizeError}
           onVisualizeBrew={handleVisualizeBrew}
           onClearVisual={() => setVisualData(null)}
           chatMessages={chatMessages}
           isChatting={isChatting}
-          chatError={chatError}
           onSendChat={handleSendChat}
           chatInputRef={chatInputRef}
           t={t}

@@ -79,7 +79,14 @@ export interface AppTranslations {
     milkAlternative: string;
     additionalNotes: string;
     notesPlaceholder: string;
-    craftErrorTitle: string;
+    localPreviewNotice: string;
+    previewLocalBrews: string;
+    hideLocalPreviews: string;
+    localPreviewsTitle: string;
+    localPreviewsSubtitle: string;
+    localPreviewCurrent: string;
+    localPreviewUse: string;
+    localPreviewApplied: string;
     crafting: string;
     craftBtn: string;
     visualizeBrew: string;
@@ -318,7 +325,17 @@ export const TRANSLATIONS: Record<LanguageCode, AppTranslations> = {
       milkAlternative: "Milk Alternative",
       additionalNotes: "Additional Notes (Optional)",
       notesPlaceholder: "e.g., Low acidity, silky texture, afternoon drink",
-      craftErrorTitle: "Unable to craft recommendation",
+      localPreviewNotice:
+        "Explore local brew previews based on your current settings. They work without Gemini.",
+      previewLocalBrews: "Preview local brews",
+      hideLocalPreviews: "Hide brew previews",
+      localPreviewsTitle: "Local brew previews",
+      localPreviewsSubtitle:
+        "Each option keeps your selected flavors, serving temperature, body, origin, roast and milk; only the brew method changes. These deterministic previews don't use Gemini.",
+      localPreviewCurrent: "Current method",
+      localPreviewUse: "Use this brew",
+      localPreviewApplied:
+        "Loaded a local brew preview based on your settings. This recipe was created without Gemini.",
       crafting: "Crafting your brew sheet...",
       craftBtn: "Craft Recommendation",
       visualizeBrew: "Visualize Brew",
@@ -576,7 +593,17 @@ export const TRANSLATIONS: Record<LanguageCode, AppTranslations> = {
       milkAlternative: "Milchalternative",
       additionalNotes: "Zusätzliche Notizen (Optional)",
       notesPlaceholder: "z. B. wenig Säure, seidige Textur, für den Nachmittag",
-      craftErrorTitle: "Empfehlung konnte nicht erstellt werden",
+      localPreviewNotice:
+        "Sieh dir lokale Brühvorschauen mit deinen aktuellen Einstellungen an – ganz ohne Gemini.",
+      previewLocalBrews: "Lokale Brühoptionen ansehen",
+      hideLocalPreviews: "Brühvorschauen ausblenden",
+      localPreviewsTitle: "Lokale Brühvorschauen",
+      localPreviewsSubtitle:
+        "Jede Option übernimmt deine gewählten Aromen, Serviertemperatur, Körper, Ursprung, Röstung und Milch; nur die Brühmethode ändert sich. Diese Vorschauen benötigen Gemini nicht.",
+      localPreviewCurrent: "Aktuelle Methode",
+      localPreviewUse: "Dieses Rezept wählen",
+      localPreviewApplied:
+        "Eine lokale Brühvorschau mit deinen Einstellungen wurde geladen. Dieses Rezept wurde ohne Gemini erstellt.",
       crafting: "Brühblatt wird erstellt...",
       craftBtn: "Rezept kreieren",
       visualizeBrew: "Visualisieren",
@@ -838,7 +865,17 @@ export const TRANSLATIONS: Record<LanguageCode, AppTranslations> = {
       milkAlternative: "పాలు / ప్రత్యామ్నాయం",
       additionalNotes: "అదనపు సూచనలు (ఐచ్ఛికం)",
       notesPlaceholder: "ఉదా: తక్కువ ఆమ్లత్వం, మృదువైన టెక్స్చర్, మధ్యాహ్నం కోసం",
-      craftErrorTitle: "రెసిపీ తయారు చేయలేకపోయాము",
+      localPreviewNotice:
+        "మీ ప్రస్తుత సెట్టింగ్‌లతో స్థానిక బ్రూ ప్రివ్యూలను చూడండి. ఇవి Gemini లేకుండానే పనిచేస్తాయి.",
+      previewLocalBrews: "స్థానిక బ్రూ ప్రివ్యూలు చూడండి",
+      hideLocalPreviews: "బ్రూ ప్రివ్యూలను దాచండి",
+      localPreviewsTitle: "స్థానిక బ్రూ ప్రివ్యూలు",
+      localPreviewsSubtitle:
+        "ప్రతి ఎంపిక మీరు ఎంచుకున్న రుచులు, సర్వింగ్ ఉష్ణోగ్రత, బాడీ, ఆరిజిన్, రోస్ట్, పాలను ఉపయోగిస్తుంది; బ్రూ విధానం మాత్రమే మారుతుంది. ఈ ప్రివ్యూలకు Gemini అవసరం లేదు.",
+      localPreviewCurrent: "ప్రస్తుత విధానం",
+      localPreviewUse: "ఈ బ్రూను ఎంచుకోండి",
+      localPreviewApplied:
+        "మీ సెట్టింగ్‌లతో స్థానిక బ్రూ ప్రివ్యూని లోడ్ చేశాం. ఈ రెసిపీ Gemini లేకుండా రూపొందించబడింది.",
       crafting: "రెసిపీ సిద్ధమవుతోంది...",
       craftBtn: "రెసిపీని తయారు చేయండి",
       visualizeBrew: "ఫొటో చూడండి",
