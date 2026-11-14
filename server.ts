@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express from "express";
-import path from "path";
+import http from "node:http";
+import path from "node:path";
 import { GoogleGenAI, Type, ThinkingLevel } from "@google/genai";
 import { createServer as createViteServer } from "vite";
 
@@ -622,9 +623,17 @@ Instructions:
     }
   );
 
+  const httpServer = http.createServer(app);
+
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
-      server: { middlewareMode: true },
+      server: {
+        middlewareMode: true,
+        hmr:
+          process.env.DISABLE_HMR === "true"
+            ? false
+            : { server: httpServer },
+      },
       appType: "spa",
     });
     app.use(vite.middlewares);
@@ -636,7 +645,7 @@ Instructions:
     });
   }
 
-  app.listen(PORT, "0.0.0.0", () => {
+  httpServer.listen(PORT, "0.0.0.0", () => {
     console.log(`KaapiWerk studio running on http://localhost:${PORT}`);
   });
 }
