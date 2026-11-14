@@ -43,8 +43,11 @@ jobs:
       - name: Production Vite build
         run: npm run build
 
-      - name: Verify build output exists
-        run: test -f dist/index.html
+      - name: Verify build output and static journal JSON
+        run: |
+          test -f dist/index.html
+          test -f dist/data/recipe-journal.json
+          node -e "const j = JSON.parse(require('fs').readFileSync('public/data/recipe-journal.json','utf8')); if (typeof j.version !== 'number' || !Array.isArray(j.entries)) process.exit(1);"
 
       - name: Smoke test production server
         env:

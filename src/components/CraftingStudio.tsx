@@ -1,16 +1,21 @@
 import { useState, RefObject, FormEvent } from "react";
 import {
   Bookmark,
+  Camera,
   Check,
+  Copy,
   Loader2,
   RotateCcw,
   Send,
   ShoppingBag,
   SlidersHorizontal,
   Timer,
+  X,
 } from "lucide-react";
 import { BrewTimer } from "./BrewTimer";
+import { ResilientImage } from "./ResilientImage";
 import { ShoppingListPanel } from "./ShoppingListPanel";
+import { copyTextToClipboard, formatEmojiRecipeSummary } from "../utils/copyRecipe";
 import {
   BREW_METHODS,
   FLAVOR_OPTIONS,
@@ -34,6 +39,11 @@ interface CraftingStudioProps {
   onCraft: () => void;
   isSaved: boolean;
   onSaveRecipe: () => void;
+  visualData: { imageUrl: string; vesselDescription: string } | null;
+  isVisualizing: boolean;
+  visualizeError: string | null;
+  onVisualizeBrew: () => void;
+  onClearVisual: () => void;
   chatMessages: ChatMessage[];
   isChatting: boolean;
   chatError: string | null;
@@ -58,6 +68,11 @@ export function CraftingStudio({
   onCraft,
   isSaved,
   onSaveRecipe,
+  visualData,
+  isVisualizing,
+  visualizeError,
+  onVisualizeBrew,
+  onClearVisual,
   chatMessages,
   isChatting,
   chatError,
@@ -68,6 +83,14 @@ export function CraftingStudio({
   const [isTimerOpen, setIsTimerOpen] = useState(false);
   const [isShoppingListOpen, setIsShoppingListOpen] = useState(false);
   const [timerSessionKey, setTimerSessionKey] = useState("init");
+  const [copiedRecipe, setCopiedRecipe] = useState(false);
+
+  const handleCopyRecipe = async () => {
+    const formatted = formatEmojiRecipeSummary(recipe);
+    await copyTextToClipboard(formatted);
+    setCopiedRecipe(true);
+    window.setTimeout(() => setCopiedRecipe(false), 2000);
+  };
 
   const handleOpenTimer = () => {
     if (isTimerOpen) {
@@ -419,9 +442,46 @@ export function CraftingStudio({
               <div className="flex flex-wrap items-center gap-2 shrink-0">
                 <button
                   type="button"
+                  onClick={onVisualizeBrew}
+                  disabled={isVisualizing}
+                  className="min-h-[40px] px-3.5 py-2 rounded-lg text-xs font-semibold inline-flex items-center gap-1.5 transition-colors whitespace-nowrap shrink-0 cursor-pointer bg-[#F7F6F3] text-[#161514] border border-[#161514]/15 hover:bg-[#EFECE6] disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9A3412]"
+                >
+                  {isVisualizing ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-[#9A3412]" />
+                      <span>Rendering...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Camera className="w-3.5 h-3.5 text-[#9A3412]" />
+                      <span>Visualize Brew</span>
+                    </>
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleCopyRecipe}
+                  className="min-h-[40px] px-3.5 py-2 rounded-lg text-xs font-semibold inline-flex items-center gap-1.5 transition-colors whitespace-nowrap shrink-0 cursor-pointer bg-[#F7F6F3] text-[#161514] border border-[#161514]/15 hover:bg-[#EFECE6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9A3412]"
+                >
+                  {copiedRecipe ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-[#9A3412]" />
+                      <span>Copied</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3.5 h-3.5" />
+                      <span>Copy Recipe</span>
+                    </>
+                  )}
+                </button>
+
+                <button
+                  type="button"
                   onClick={() => setIsShoppingListOpen((prev) => !prev)}
                   aria-expanded={isShoppingListOpen}
-                  className={`min-h-[40px] px-4 py-2 rounded-lg text-xs font-semibold inline-flex items-center gap-2 transition-colors whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9A3412] ${
+                  className={`min-h-[40px] px-3.5 py-2 rounded-lg text-xs font-semibold inline-flex items-center gap-1.5 transition-colors whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9A3412] ${
                     isShoppingListOpen
                       ? "bg-[#161514] text-white"
                       : "bg-[#F7F6F3] text-[#161514] border border-[#161514]/15 hover:bg-[#EFECE6]"
@@ -437,7 +497,7 @@ export function CraftingStudio({
                   type="button"
                   onClick={handleOpenTimer}
                   aria-expanded={isTimerOpen}
-                  className={`min-h-[40px] px-4 py-2 rounded-lg text-xs font-semibold inline-flex items-center gap-2 transition-colors whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9A3412] ${
+                  className={`min-h-[40px] px-3.5 py-2 rounded-lg text-xs font-semibold inline-flex items-center gap-1.5 transition-colors whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9A3412] ${
                     isTimerOpen
                       ? "bg-[#161514] text-white"
                       : "bg-[#F7F6F3] text-[#161514] border border-[#161514]/15 hover:bg-[#EFECE6]"
@@ -450,7 +510,7 @@ export function CraftingStudio({
                 <button
                   type="button"
                   onClick={onSaveRecipe}
-                  className={`min-h-[40px] px-4 py-2 rounded-lg text-xs font-semibold inline-flex items-center gap-2 transition-colors whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9A3412] ${
+                  className={`min-h-[40px] px-4 py-2 rounded-lg text-xs font-semibold inline-flex items-center gap-1.5 transition-colors whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9A3412] ${
                     isSaved
                       ? "bg-[#EFECE6] text-[#161514] border border-[#161514]/15"
                       : "bg-[#9A3412] text-white hover:bg-[#7C2D12]"
@@ -459,17 +519,62 @@ export function CraftingStudio({
                   {isSaved ? (
                     <>
                       <Check className="w-3.5 h-3.5 text-[#9A3412]" />
-                      <span>Saved</span>
+                      <span>Saved to Journal</span>
                     </>
                   ) : (
                     <>
                       <Bookmark className="w-3.5 h-3.5" />
-                      <span>Save Recipe</span>
+                      <span>Save to Journal</span>
                     </>
                   )}
                 </button>
               </div>
             </div>
+
+            {visualizeError && (
+              <div
+                role="alert"
+                className="mt-5 p-3.5 rounded-lg bg-[#FEF2F2] border border-[#DC2626]/20 text-xs text-[#991B1B]"
+              >
+                {visualizeError}
+              </div>
+            )}
+
+            {visualData && (
+              <div className="mt-5 bg-[#F7F6F3] border border-[#161514]/10 rounded-xl overflow-hidden">
+                <div className="relative aspect-[4/3] bg-[#161514]">
+                  <ResilientImage
+                    src={visualData.imageUrl}
+                    alt={`${recipe.title} served in ${visualData.vesselDescription}`}
+                    className="w-full h-full object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={onClearVisual}
+                    aria-label="Close brew visualization"
+                    className="absolute top-3 right-3 w-8 h-8 rounded-lg bg-black/65 text-white hover:bg-black/85 flex items-center justify-center transition-colors cursor-pointer"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+                <div className="px-4 py-3 flex flex-wrap items-center justify-between gap-2 text-xs text-[#57534E]">
+                  <span>
+                    <strong className="font-semibold text-[#161514]">
+                      {recipe.title}
+                    </strong>{" "}
+                    · {visualData.vesselDescription} · {recipe.milkPairing.name}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={onVisualizeBrew}
+                    disabled={isVisualizing}
+                    className="font-semibold text-[#9A3412] hover:text-[#7C2D12] transition-colors cursor-pointer"
+                  >
+                    Regenerate
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* Barista Note */}
             <div className="py-5 border-b border-[#161514]/10">

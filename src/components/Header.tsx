@@ -1,11 +1,17 @@
-import { Bookmark } from "lucide-react";
+import { BookOpen } from "lucide-react";
+import { JournalUser } from "../types/coffee";
 
 interface HeaderProps {
   savedCount: number;
+  currentUser: JournalUser | null;
   onOpenSaved: () => void;
 }
 
-export function Header({ savedCount, onOpenSaved }: HeaderProps) {
+export function Header({
+  savedCount,
+  currentUser,
+  onOpenSaved,
+}: HeaderProps) {
   return (
     <header className="sticky top-0 z-30 bg-[#F7F6F3]/95 backdrop-blur-sm border-b border-[#161514]/10">
       <div className="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between gap-8">
@@ -27,10 +33,10 @@ export function Header({ savedCount, onOpenSaved }: HeaderProps) {
             Craft Studio
           </a>
           <a
-            href="#barista-chat"
+            href="#journal"
             className="hover:text-[#161514] transition-colors whitespace-nowrap shrink-0 underline-offset-4 hover:underline"
           >
-            Barista Chat
+            Recipe Journal
           </a>
           <a
             href="#origins"
@@ -52,8 +58,8 @@ export function Header({ savedCount, onOpenSaved }: HeaderProps) {
             onClick={onOpenSaved}
             className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-[#161514] rounded-lg hover:bg-[#2C2A28] transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9A3412] focus-visible:ring-offset-2 cursor-pointer"
           >
-            <Bookmark className="w-3.5 h-3.5" strokeWidth={2} />
-            <span>Saved Brews</span>
+            <BookOpen className="w-3.5 h-3.5" strokeWidth={2} />
+            <span>{currentUser ? "Recipe Journal" : "Sign In"}</span>
             {savedCount > 0 && (
               <span className="font-mono tabular-nums text-[#F59E0B]">
                 ({savedCount})
