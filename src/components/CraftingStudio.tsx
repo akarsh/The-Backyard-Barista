@@ -5,8 +5,12 @@ import {
   Loader2,
   RotateCcw,
   Send,
+  ShoppingBag,
   SlidersHorizontal,
+  Timer,
 } from "lucide-react";
+import { BrewTimer } from "./BrewTimer";
+import { ShoppingListPanel } from "./ShoppingListPanel";
 import {
   BREW_METHODS,
   FLAVOR_OPTIONS,
@@ -61,6 +65,18 @@ export function CraftingStudio({
   chatInputRef,
 }: CraftingStudioProps) {
   const [chatDraft, setChatDraft] = useState("");
+  const [isTimerOpen, setIsTimerOpen] = useState(false);
+  const [isShoppingListOpen, setIsShoppingListOpen] = useState(false);
+  const [timerSessionKey, setTimerSessionKey] = useState("init");
+
+  const handleOpenTimer = () => {
+    if (isTimerOpen) {
+      setIsTimerOpen(false);
+    } else {
+      setTimerSessionKey(`${recipe.title}-${Date.now()}`);
+      setIsTimerOpen(true);
+    }
+  };
 
   const toggleFlavor = (flavor: string) => {
     const exists = preferences.flavors.includes(flavor);
@@ -400,27 +416,59 @@ export function CraftingStudio({
                 </p>
               </div>
 
-              <button
-                type="button"
-                onClick={onSaveRecipe}
-                className={`min-h-[40px] px-4 py-2 rounded-lg text-xs font-semibold inline-flex items-center gap-2 transition-colors whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9A3412] ${
-                  isSaved
-                    ? "bg-[#EFECE6] text-[#161514] border border-[#161514]/15"
-                    : "bg-[#9A3412] text-white hover:bg-[#7C2D12]"
-                }`}
-              >
-                {isSaved ? (
-                  <>
-                    <Check className="w-3.5 h-3.5 text-[#9A3412]" />
-                    <span>Saved</span>
-                  </>
-                ) : (
-                  <>
-                    <Bookmark className="w-3.5 h-3.5" />
-                    <span>Save Recipe</span>
-                  </>
-                )}
-              </button>
+              <div className="flex flex-wrap items-center gap-2 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setIsShoppingListOpen((prev) => !prev)}
+                  aria-expanded={isShoppingListOpen}
+                  className={`min-h-[40px] px-4 py-2 rounded-lg text-xs font-semibold inline-flex items-center gap-2 transition-colors whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9A3412] ${
+                    isShoppingListOpen
+                      ? "bg-[#161514] text-white"
+                      : "bg-[#F7F6F3] text-[#161514] border border-[#161514]/15 hover:bg-[#EFECE6]"
+                  }`}
+                >
+                  <ShoppingBag className="w-3.5 h-3.5" />
+                  <span>
+                    {isShoppingListOpen ? "Hide List" : "Shopping List"}
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleOpenTimer}
+                  aria-expanded={isTimerOpen}
+                  className={`min-h-[40px] px-4 py-2 rounded-lg text-xs font-semibold inline-flex items-center gap-2 transition-colors whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9A3412] ${
+                    isTimerOpen
+                      ? "bg-[#161514] text-white"
+                      : "bg-[#F7F6F3] text-[#161514] border border-[#161514]/15 hover:bg-[#EFECE6]"
+                  }`}
+                >
+                  <Timer className="w-3.5 h-3.5" />
+                  <span>{isTimerOpen ? "Hide Timer" : "Brew Timer"}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={onSaveRecipe}
+                  className={`min-h-[40px] px-4 py-2 rounded-lg text-xs font-semibold inline-flex items-center gap-2 transition-colors whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9A3412] ${
+                    isSaved
+                      ? "bg-[#EFECE6] text-[#161514] border border-[#161514]/15"
+                      : "bg-[#9A3412] text-white hover:bg-[#7C2D12]"
+                  }`}
+                >
+                  {isSaved ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-[#9A3412]" />
+                      <span>Saved</span>
+                    </>
+                  ) : (
+                    <>
+                      <Bookmark className="w-3.5 h-3.5" />
+                      <span>Save Recipe</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
 
             {/* Barista Note */}
@@ -529,6 +577,19 @@ export function CraftingStudio({
                   </span>
                 </div>
               </div>
+
+              <ShoppingListPanel
+                recipe={recipe}
+                isOpen={isShoppingListOpen}
+                onClose={() => setIsShoppingListOpen(false)}
+              />
+
+              <BrewTimer
+                recipe={recipe}
+                isOpen={isTimerOpen}
+                onClose={() => setIsTimerOpen(false)}
+                sessionKey={timerSessionKey}
+              />
 
               <div className="mt-5 space-y-2.5">
                 {recipe.brewRecipe.steps.map((step, index) => (

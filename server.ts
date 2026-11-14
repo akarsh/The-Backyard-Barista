@@ -4,7 +4,7 @@ import path from "path";
 import { GoogleGenAI, Type, ThinkingLevel } from "@google/genai";
 import { createServer as createViteServer } from "vite";
 
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 3000;
 const PRIMARY_MODEL = "gemini-4-hydrogen";
 const FALLBACK_MODEL = "gemini-3.1-flash-lite";
 
@@ -18,7 +18,7 @@ function getAiClient(): GoogleGenAI {
   return new GoogleGenAI({
     apiKey,
     httpOptions: {
-      timeout: 15000,
+      timeout: 18000,
       headers: {
         "User-Agent": "aistudio-build",
       },
@@ -97,6 +97,20 @@ const CRAFT_RECIPE_SCHEMA = {
           type: Type.ARRAY,
           items: { type: Type.STRING },
         },
+        timerPhases: {
+          type: Type.ARRAY,
+          description:
+            "3 to 4 sequential timed phases tailored to the brew method (e.g. 30s Bloom, 60s First Pour, 45s Drawdown; or 28s Extraction, 20s Steam Milk, 10s Pour). Keep durations practical in seconds (5 to 300s).",
+          items: {
+            type: Type.OBJECT,
+            properties: {
+              label: { type: Type.STRING },
+              durationSeconds: { type: Type.INTEGER },
+              instruction: { type: Type.STRING },
+            },
+            required: ["label", "durationSeconds", "instruction"],
+          },
+        },
       },
       required: [
         "method",
@@ -108,6 +122,7 @@ const CRAFT_RECIPE_SCHEMA = {
         "grindSetting",
         "brewTime",
         "steps",
+        "timerPhases",
       ],
     },
     tastingNotes: {
@@ -160,46 +175,65 @@ function isTransientHighDemand(error: unknown): boolean {
     err?.status === 503 ||
     err?.status === 504 ||
     msg.includes("UNAVAILABLE") ||
+    msg.includes("DEADLINE_EXCEEDED") ||
+    msg.includes("503") ||
+    msg.includes("504") ||
     msg.includes("high demand") ||
     msg.includes("timed out") ||
     msg.includes("Timeout")
   );
 }
 
+function extractReadableMessage(rawMsg: string): string {
+  try {
+    const parsed = JSON.parse(rawMsg);
+    if (parsed?.error?.message) return String(parsed.error.message);
+  } catch {
+    // not JSON
+  }
+  return rawMsg;
+}
+
 function formatGeminiError(error: unknown): { status: number; message: string } {
   const err = error as { status?: number; message?: string };
-  const msg = err?.message || "Unexpected error communicating with Gemini.";
+  const rawMsg = err?.message || "Unexpected error communicating with Gemini.";
+  const msg = extractReadableMessage(rawMsg);
   const status = typeof err?.status === "number" ? err.status : 500;
 
-  if (status === 403 || msg.includes("PERMISSION_DENIED")) {
+  if (status === 403 || rawMsg.includes("PERMISSION_DENIED")) {
     return {
       status: 403,
       message:
         "API permission denied. Please verify your GEMINI_API_KEY in Settings > Secrets.",
     };
   }
-  if (status === 400 && msg.includes("API_KEY_INVALID")) {
+  if (status === 400 && rawMsg.includes("API_KEY_INVALID")) {
     return {
       status: 400,
       message:
         "Invalid Gemini API key. Please check GEMINI_API_KEY in Settings > Secrets.",
     };
   }
-  if (status === 429 || msg.includes("RESOURCE_EXHAUSTED")) {
+  if (status === 429 || rawMsg.includes("RESOURCE_EXHAUSTED")) {
     return {
       status: 429,
       message:
         "Rate limit reached on the Gemini API. Please pause briefly and try again.",
     };
   }
-  if (status === 503 || msg.includes("UNAVAILABLE")) {
+  if (
+    status === 503 ||
+    status === 504 ||
+    rawMsg.includes("UNAVAILABLE") ||
+    rawMsg.includes("DEADLINE_EXCEEDED")
+  ) {
     return {
-      status: 503,
+      status: status === 504 ? 504 : 503,
       message:
-        "The barista service is experiencing temporary high demand. Please try again in a moment.",
+        "The barista service is temporarily busy. Please try again in a moment.",
     };
   }
-  if (status === 404 || msg.includes("NOT_FOUND")) {
+  if (status === 404 || rawMsg.includes("NOT_FOUND")) {
     return {
       status: 404,
       message: `Requested model (${PRIMARY_MODEL}) was not found or is unavailable.`,
@@ -215,6 +249,23 @@ async function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
       setTimeout(() => reject(new Error("Request timed out")), ms)
     ),
   ]);
+}
+
+function parseModelJson<T>(rawText: string): T {
+  const cleaned = rawText
+    .replace(/^```(?:json)?\s*/i, "")
+    .replace(/\s*```$/i, "")
+    .trim();
+  try {
+    return JSON.parse(cleaned) as T;
+  } catch {
+    const start = cleaned.indexOf("{");
+    const end = cleaned.lastIndexOf("}");
+    if (start !== -1 && end > start) {
+      return JSON.parse(cleaned.slice(start, end + 1)) as T;
+    }
+    throw new Error("Barista returned an unreadable response format. Please try again.");
+  }
 }
 
 async function startServer() {
@@ -245,7 +296,7 @@ async function startServer() {
 - Milk or dairy-free alternative: ${selectedMilk}
 ${customNote ? `- Guest's extra note: "${customNote}"` : ""}
 
-If any parameter says "Barista Choice", choose the single best specialty option to achieve their flavor preferences. If they chose "Black / No Milk" or a filter method where milk isn't typical unless requested, set milkPairing.name to "Black (No Milk)" and explain why clean extraction preserves the aromatics (with steamTempC set to 0). Make all brew measurements mathematically accurate and realistic for specialty coffee.`;
+If any parameter says "Barista Choice", choose the single best specialty option to achieve their flavor preferences. If they chose "Black / No Milk" or a filter method where milk isn't typical unless requested, set milkPairing.name to "Black (No Milk)" and explain why clean extraction preserves the aromatics (with steamTempC set to 0). Make all brew measurements mathematically accurate and realistic for specialty coffee. Always include 3 to 4 practical sequential timerPhases (each 5-240 seconds) tailored to the chosen brew method (e.g., 30s bloom, spiral pours, drawdown for pour-over; or extraction, milk steaming, and pouring for espresso drinks).`;
 
       let response;
       try {
@@ -260,7 +311,7 @@ If any parameter says "Barista Choice", choose the single best specialty option 
               thinkingConfig: { thinkingLevel: ThinkingLevel.LOW },
             },
           }),
-          14000
+          18000
         );
       } catch (primaryErr) {
         if (!isTransientHighDemand(primaryErr)) {
@@ -276,12 +327,12 @@ If any parameter says "Barista Choice", choose the single best specialty option 
               responseSchema: CRAFT_RECIPE_SCHEMA,
             },
           }),
-          14000
+          18000
         );
       }
 
       const rawText = (response.text ?? "{}").trim();
-      const recipe = JSON.parse(rawText);
+      const recipe = parseModelJson(rawText);
       res.json({ recipe });
     } catch (error) {
       const formatted = formatGeminiError(error);
@@ -330,7 +381,7 @@ Instructions:
         });
         response = await withTimeout(
           chat.sendMessage({ message: latestMessage }),
-          14000
+          18000
         );
       } catch (primaryErr) {
         if (!isTransientHighDemand(primaryErr)) {
@@ -347,18 +398,33 @@ Instructions:
         });
         response = await withTimeout(
           fallbackChat.sendMessage({ message: latestMessage }),
-          14000
+          18000
         );
       }
 
       const rawText = (response.text ?? "{}").trim();
-      const parsed = JSON.parse(rawText);
+      const parsed = parseModelJson(rawText);
       res.json(parsed);
     } catch (error) {
       const formatted = formatGeminiError(error);
       res.status(formatted.status).json({ error: formatted.message });
     }
   });
+
+  app.use(
+    (
+      err: Error,
+      req: express.Request,
+      res: express.Response,
+      next: express.NextFunction
+    ) => {
+      if (req.path.startsWith("/api/")) {
+        res.status(400).json({ error: err.message || "Invalid API request." });
+        return;
+      }
+      next(err);
+    }
+  );
 
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({

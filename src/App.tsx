@@ -64,6 +64,20 @@ export default function App() {
       b.recipe.milkPairing.name === recipe.milkPairing.name
   );
 
+  const parseApiJson = async (response: Response) => {
+    const raw = await response.text();
+    try {
+      return JSON.parse(raw);
+    } catch {
+      if (!response.ok) {
+        throw new Error(
+          `Service returned status ${response.status}. Please try again in a moment.`
+        );
+      }
+      throw new Error("Received an unexpected response format from the server.");
+    }
+  };
+
   const runCraftRequest = async (prefs: CraftPreferences) => {
     setIsCrafting(true);
     setCraftError(null);
@@ -73,7 +87,7 @@ export default function App() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(prefs),
       });
-      const data = await response.json();
+      const data = await parseApiJson(response);
       if (!response.ok) {
         throw new Error(
           data.error || "Could not generate coffee recommendation."
@@ -120,7 +134,7 @@ export default function App() {
           currentRecipe: recipe,
         }),
       });
-      const data = await response.json();
+      const data = await parseApiJson(response);
       if (!response.ok) {
         throw new Error(data.error || "Barista could not respond right now.");
       }

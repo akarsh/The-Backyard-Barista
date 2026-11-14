@@ -9,6 +9,12 @@ export interface CraftPreferences {
   customNote: string;
 }
 
+export interface TimerPhase {
+  label: string;
+  durationSeconds: number;
+  instruction: string;
+}
+
 export interface CraftedRecipe {
   title: string;
   baristaNote: string;
@@ -42,6 +48,7 @@ export interface CraftedRecipe {
     grindSetting: string;
     brewTime: string;
     steps: string[];
+    timerPhases?: TimerPhase[];
   };
   tastingNotes: string[];
   proTip: string;
@@ -77,3 +84,25 @@ export interface SavedBrew {
   savedAt: string;
   recipe: CraftedRecipe;
 }
+
+export interface JournalUser {
+  userKey: string;
+  displayHandle: string;
+  signedInAt: string;
+}
+
+export interface JournalEntry {
+  id: string;
+  userKey: string;
+  displayHandle: string;
+  savedAt: string;
+  notes?: string;
+  recipe: CraftedRecipe;
+}
+
+export interface RepoJournalFile {
+  version: number;
+  updatedAt: string;
+  entries: JournalEntry[];
+}
+

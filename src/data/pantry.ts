@@ -1,4 +1,8 @@
 import { CraftedRecipe, OriginLot } from "../types/coffee";
+import heroCoffeeBarImg from "../assets/images/hero_coffee_bar_1794655634637.jpg";
+import beanEthiopiaImg from "../assets/images/bean_ethiopia_floral_1794655637946.jpg";
+import beanColombiaImg from "../assets/images/bean_colombia_cocoa_1794655637878.jpg";
+import milkOatLatteImg from "../assets/images/milk_oat_latte_art_1794655638061.jpg";
 
 export const FLAVOR_OPTIONS = [
   "Sweet",
@@ -107,7 +111,7 @@ export const ORIGIN_LOTS: OriginLot[] = [
     tastingLine: "Bergamot · White Peach · Jasmine Blossom",
     description:
       "High-altitude washed Ethiopian lot with crystalline tea-like structure and crisp citrus sweetness.",
-    imageUrl: "/src/assets/images/bean_ethiopia_floral_1794655637946.jpg",
+    imageUrl: beanEthiopiaImg,
     imageAlt:
       "Light-roasted Ethiopian coffee beans beside a matte off-white stoneware tasting cup on pale stone",
   },
@@ -126,7 +130,7 @@ export const ORIGIN_LOTS: OriginLot[] = [
     tastingLine: "Milk Chocolate · Roasted Hazelnut · Demerara",
     description:
       "Velvety honey-processed Huila lot engineered to bloom into praline and cocoa when paired with steamed oat milk.",
-    imageUrl: "/src/assets/images/bean_colombia_cocoa_1794655637878.jpg",
+    imageUrl: beanColombiaImg,
     imageAlt:
       "Medium-roasted Colombian coffee beans in a steel dosing tray next to a ceramic demitasse",
   },
@@ -145,7 +149,7 @@ export const ORIGIN_LOTS: OriginLot[] = [
     tastingLine: "70% Dark Cacao · Toasted Almond · Brown Butter",
     description:
       "Sun-dried Yellow Bourbon offering heavy crema, low acidity, and unmistakable dark-chocolate richness under pressure.",
-    imageUrl: "/src/assets/images/milk_oat_latte_art_1794655638061.jpg",
+    imageUrl: milkOatLatteImg,
     imageAlt:
       "Steamed microfoam poured into a charcoal speckled ceramic flat white cup forming rosetta latte art",
   },
@@ -192,12 +196,31 @@ export const INITIAL_RECIPE: CraftedRecipe = {
       "Texture 135ml cold Barista Oat milk to 60°C, stopping steam before it exceeds 62°C to keep oat sugars intact.",
       "Swirl the pitcher until wet-paint glossy, then pour steady into the center to fold crema cleanly.",
     ],
+    timerPhases: [
+      {
+        label: "Double Espresso Pull",
+        durationSeconds: 29,
+        instruction:
+          "Pull a 37g double shot from 18.5g finely ground Huila beans at 93°C.",
+      },
+      {
+        label: "Steam Barista Oat",
+        durationSeconds: 20,
+        instruction:
+          "Aerate 135ml cold Barista Oat for 3 seconds, then vortex-texture until 60°C.",
+      },
+      {
+        label: "Fold & Pour",
+        durationSeconds: 12,
+        instruction:
+          "Swirl pitcher until glossy and pour steady into the center to integrate crema.",
+      },
+    ],
   },
   tastingNotes: ["Milk Chocolate", "Toasted Hazelnut", "Brown Sugar", "Sweet Oat"],
   proTip:
     "Keep oat milk under 62°C during steaming—pushing higher breaks down natural enzymes and flattens the praline sweetness.",
 };
 
-export const HERO_IMAGE_URL = "/src/assets/images/hero_coffee_bar_1794655634637.jpg";
-export const MILK_FEATURE_IMAGE_URL =
-  "/src/assets/images/milk_oat_latte_art_1794655638061.jpg";
+export const HERO_IMAGE_URL = heroCoffeeBarImg;
+export const MILK_FEATURE_IMAGE_URL = milkOatLatteImg;
