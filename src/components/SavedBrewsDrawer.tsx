@@ -30,7 +30,7 @@ export function SavedBrewsDrawer({
       className="fixed inset-0 z-50 flex justify-end bg-black/50 backdrop-blur-[2px]"
       role="dialog"
       aria-modal="true"
-      aria-label="Recipe Journal Drawer"
+      aria-label={t.drawer.title}
     >
       <div className="flex-1" onClick={onClose} aria-hidden="true" />
       <aside className="w-full sm:max-w-md bg-[#F8F5EE] dark:bg-[#12100E] h-full shadow-2xl border-l border-[#191614]/10 dark:border-white/10 flex flex-col pb-[env(safe-area-inset-bottom)]">
@@ -56,7 +56,7 @@ export function SavedBrewsDrawer({
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close recipe journal drawer"
+            aria-label={t.accessibility.closeJournal}
             className="w-11 h-11 rounded-lg bg-[#F8F5EE] dark:bg-[#26221E] hover:bg-[#EFE9DC] dark:hover:bg-[#312B25] text-[#191614] dark:text-[#F5F0E6] flex items-center justify-center shrink-0 transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
@@ -117,7 +117,7 @@ export function SavedBrewsDrawer({
                   <button
                     type="button"
                     onClick={() => onDeleteEntry(item.id)}
-                    aria-label={`Delete ${item.recipe.title}`}
+                    aria-label={`${t.accessibility.removeRecipe}: ${item.recipe.title}`}
                     className="w-9 h-9 rounded-lg text-[#5C534A] dark:text-[#B8AFA4] hover:text-[#991B1B] dark:hover:text-[#FCA5A5] hover:bg-[#FEF2F2] dark:hover:bg-[#7F1D1D]/30 flex items-center justify-center transition-colors shrink-0 cursor-pointer"
                   >
                     <Trash2 className="w-4 h-4" />

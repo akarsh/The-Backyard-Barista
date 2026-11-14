@@ -263,7 +263,7 @@ export function BrewTimer({
         <button
           type="button"
           onClick={onClose}
-          aria-label="Close brew timer"
+          aria-label={t.accessibility.closeTimer}
           className="w-10 h-10 rounded-lg bg-white dark:bg-[#1C1917] border border-[#191614]/10 dark:border-white/10 text-[#5C534A] dark:text-[#B8AFA4] hover:text-[#191614] dark:hover:text-[#F5F0E6] flex items-center justify-center shrink-0 transition-colors cursor-pointer"
         >
           <X className="w-4 h-4" />

@@ -566,7 +566,7 @@ export function CraftingStudio({
                   <button
                     type="button"
                     onClick={onClearVisual}
-                    aria-label="Close brew visualization"
+                    aria-label={t.accessibility.closeVisualization}
                     className="absolute top-3 right-3 w-8 h-8 rounded-lg bg-black/65 text-white hover:bg-black/85 flex items-center justify-center transition-colors cursor-pointer"
                   >
                     <X className="w-4 h-4" />
@@ -828,7 +828,7 @@ export function CraftingStudio({
                   value={chatDraft}
                   onChange={(e) => setChatDraft(e.target.value)}
                   placeholder={t.studio.chatPlaceholder}
-                  aria-label="Message Milo the barista"
+                  aria-label={t.accessibility.messageMilo}
                   className="flex-1 min-w-0 min-h-[44px] px-3.5 sm:px-4 py-2 text-base sm:text-sm bg-[#F8F5EE] dark:bg-[#26221E] text-[#191614] dark:text-[#F5F0E6] placeholder:text-[#78716C] dark:placeholder:text-[#8E857B] border border-[#191614]/15 dark:border-white/12 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A62C1B] dark:focus:ring-[#F59E0B]"
                 />
                 <button

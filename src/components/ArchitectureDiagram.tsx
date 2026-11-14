@@ -39,7 +39,7 @@ export function ArchitectureDiagram({ t }: ArchitectureDiagramProps) {
 
           <div
             role="group"
-            aria-label="Inspect architecture mode"
+            aria-label={t.accessibility.architectureMode}
             className="inline-flex items-center gap-1 p-1 rounded-lg bg-[#EFE9DC] dark:bg-[#26221E] border border-[#191614]/10 dark:border-white/10 self-start md:self-auto"
           >
             <button

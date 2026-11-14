@@ -3,6 +3,21 @@ export type LanguageCode = "en" | "de" | "te";
 export interface AppTranslations {
   brandName: string;
   brandSubline: string;
+  accessibility: {
+    primaryNavigation: string;
+    mobileNavigation: string;
+    languageSelector: string;
+    languageAndThemeControls: string;
+    colorTheme: string;
+    closeJournal: string;
+    closeTimer: string;
+    closeVisualization: string;
+    closeShoppingList: string;
+    messageMilo: string;
+    architectureMode: string;
+    usernameOrEmail: string;
+    removeRecipe: string;
+  };
   nav: {
     studio: string;
     journal: string;
@@ -221,6 +236,21 @@ export const TRANSLATIONS: Record<LanguageCode, AppTranslations> = {
   en: {
     brandName: "KaapiWerk",
     brandSubline: "Akarsh Seggemu · Coffee Barista",
+    accessibility: {
+      primaryNavigation: "Primary navigation",
+      mobileNavigation: "Mobile quick navigation",
+      languageSelector: "Language selector",
+      languageAndThemeControls: "Language, theme, and scroll controls",
+      colorTheme: "Color theme",
+      closeJournal: "Close recipe journal",
+      closeTimer: "Close brew timer",
+      closeVisualization: "Close brew visualization",
+      closeShoppingList: "Close shopping list",
+      messageMilo: "Message Milo the barista",
+      architectureMode: "Inspect architecture mode",
+      usernameOrEmail: "Username or email",
+      removeRecipe: "Remove recipe",
+    },
     nav: {
       studio: "Craft Studio",
       journal: "Recipe Journal",
@@ -464,6 +494,21 @@ export const TRANSLATIONS: Record<LanguageCode, AppTranslations> = {
   de: {
     brandName: "KaapiWerk",
     brandSubline: "Akarsh Seggemu · Kaffeeröster & Barista",
+    accessibility: {
+      primaryNavigation: "Hauptnavigation",
+      mobileNavigation: "Mobile Schnellnavigation",
+      languageSelector: "Sprachauswahl",
+      languageAndThemeControls: "Steuerung für Sprache, Farbschema und Seitenanfang",
+      colorTheme: "Farbschema",
+      closeJournal: "Rezept-Journal schließen",
+      closeTimer: "Brüh-Timer schließen",
+      closeVisualization: "Brühvisualisierung schließen",
+      closeShoppingList: "Einkaufsliste schließen",
+      messageMilo: "Milo, dem Barista, eine Nachricht senden",
+      architectureMode: "Architekturmodus auswählen",
+      usernameOrEmail: "Benutzername oder E-Mail-Adresse",
+      removeRecipe: "Rezept entfernen",
+    },
     nav: {
       studio: "Brüh-Studio",
       journal: "Rezept-Journal",
@@ -623,8 +668,8 @@ export const TRANSLATIONS: Record<LanguageCode, AppTranslations> = {
       syncTitle: "Direkter GitHub Repository-Sync",
       syncDescPrefix: "Speichert die aktualisierte",
       syncDescSuffix:
-        "direkt von GitHub Pages per Commit im Repo. Dein Token bleibt nur im Arbeitsspeicher.",
-      repoLabel: "Repository (besitzer/name)",
+        "direkt von GitHub Pages per Commit im Repository. Dein Token bleibt nur im Arbeitsspeicher und wird beim Abmelden oder Neuladen gelöscht.",
+      repoLabel: "GitHub-Konto/Repository",
       branchLabel: "Branch",
       patLabel: "Fine-Grained PAT (Contents: Read & Write)",
       syncing: "Synchronisiert...",
@@ -711,6 +756,21 @@ export const TRANSLATIONS: Record<LanguageCode, AppTranslations> = {
   te: {
     brandName: "కాపీవెర్క్",
     brandSubline: "ఆకర్ష్ సెగ్గెము · కాఫీ బారిస్టా",
+    accessibility: {
+      primaryNavigation: "ప్రధాన నావిగేషన్",
+      mobileNavigation: "మొబైల్ త్వరిత నావిగేషన్",
+      languageSelector: "భాష ఎంపిక",
+      languageAndThemeControls: "భాష, థీమ్ మరియు పైకి వెళ్లే నియంత్రణలు",
+      colorTheme: "రంగుల థీమ్",
+      closeJournal: "రెసిపీ జర్నల్‌ను మూసివేయండి",
+      closeTimer: "బ్రూ టైమర్‌ను మూసివేయండి",
+      closeVisualization: "కాఫీ చిత్రాన్ని మూసివేయండి",
+      closeShoppingList: "షాపింగ్ లిస్ట్‌ను మూసివేయండి",
+      messageMilo: "బారిస్టా మైలోకు సందేశం పంపండి",
+      architectureMode: "సిస్టమ్ మ్యాప్ విధానాన్ని ఎంచుకోండి",
+      usernameOrEmail: "యూజర్‌నేమ్ లేదా ఈమెయిల్",
+      removeRecipe: "రెసిపీని తొలగించండి",
+    },
     nav: {
       studio: "క్రాఫ్ట్ స్టూడియో",
       journal: "రెసిపీ జర్నల్",
@@ -851,10 +911,10 @@ export const TRANSLATIONS: Record<LanguageCode, AppTranslations> = {
       eyebrow: "02. రిపోజిటరీ రెసిపీ జర్నల్",
       title: "మీరు సేవ్ చేసిన కాఫీ రెసిపీలు",
       subtitle:
-        "పాస్‌వర్డ్ లేకుండా యూజర్‌నేమ్ లేదా ఈమెయిల్‌తో సైన్ ఇన్ కండి. మీ రెసిపీలు క్లౌడ్ ఖర్చు లేకుండా స్టాటిక్ GitHub JSON లో భద్రపరచబడతాయి.",
+        "పాస్‌వర్డ్ లేకుండా యూజర్‌నేమ్ లేదా ఈమెయిల్‌తో సైన్ ఇన్ చేయండి. మీ రెసిపీలు క్లౌడ్ ఖర్చు లేకుండా స్టాటిక్ GitHub JSONలో భద్రపరచబడతాయి.",
       accessTitle: "పాస్‌వర్డ్ లేని జర్నల్ లాగిన్",
       accessDesc:
-        "మీ వ్యక్తిగత జర్నల్ తెరవడానికి యూజర్‌నేమ్ లేదా ఈమెయిల్ నమోదు చేయండి. మీ పేరు స్థానికంగా SHA-256 తో హ్యాష్ చేయబడుతుంది కాబట్టి అసలు ఈమెయిల్ ఎక్కడా కనిపించదు.",
+        "మీ వ్యక్తిగత జర్నల్ తెరవడానికి యూజర్‌నేమ్ లేదా ఈమెయిల్ నమోదు చేయండి. మీ గుర్తింపు స్థానికంగా SHA-256తో హ్యాష్ అవుతుంది; అసలు ఈమెయిల్ పబ్లిక్ రిపోజిటరీ ఫైళ్లలో నిల్వ చేయబడదు.",
       inputPlaceholder: "యూజర్‌నేమ్ లేదా ఈమెయిల్ (ఉదా: alex@domain.com)",
       signingIn: "లాగిన్ అవుతోంది...",
       openJournalBtn: "జర్నల్ తెరవండి",
@@ -868,8 +928,8 @@ export const TRANSLATIONS: Record<LanguageCode, AppTranslations> = {
       syncTitle: "నేరుగా GitHub రిపోజిటరీ సింక్",
       syncDescPrefix: "అప్‌డేట్ చేసిన",
       syncDescSuffix:
-        "ఫైల్‌ను GitHub Pages నుండే నేరుగా కమిట్ చేస్తుంది. మీ టోకెన్ కేవలం మెమరీలో మాత్రమే ఉంటుంది.",
-      repoLabel: "రిపోజిటరీ (owner/name)",
+        "ఫైల్‌ను GitHub Pages నుండే నేరుగా కమిట్ చేస్తుంది. మీ టోకెన్ మెమరీలో మాత్రమే ఉండి, సైన్ అవుట్ చేసినప్పుడు లేదా పేజీని మళ్లీ లోడ్ చేసినప్పుడు తొలగించబడుతుంది.",
+      repoLabel: "GitHub ఖాతా/రిపోజిటరీ",
       branchLabel: "బ్రాంచ్",
       patLabel: "Fine-Grained PAT (Contents: Read & Write)",
       syncing: "సింక్ అవుతోంది...",

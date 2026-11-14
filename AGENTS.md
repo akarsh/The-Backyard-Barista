@@ -74,6 +74,7 @@
 | `npm run dev` | Start Express + Vite dev server on `http://localhost:3000` |
 | `npm run build` | Compile production static bundle into `dist/` |
 | `npm run lint` | Run TypeScript typechecking (`tsc --noEmit`) |
+| `npm run licenses` | Regenerate human- and machine-readable third-party dependency license inventories |
 | `npm start` | Serve production `dist/` via Node ESM (`node server.ts`) |
 
 ## 5. Non-Negotiable Architecture & Security Invariants
@@ -85,3 +86,4 @@
 5. **Prototype Pollution & XSS Defense**: Parse untrusted JSON with `safeJsonParse` + `sanitizeRepoJournalFile` (`src/utils/security.ts`). Keep `https://` protocol validation on external links.
 6. **ESM Node Compatibility (`server.ts`)**: `npm start` executes `node server.ts` directly. Do not use TypeScript runtime-only features (`enum` declarations, parameter properties, or relative `.ts` file extension imports inside `server.ts`).
 7. **Dual-Theme Parity**: Every UI surface, border, and text class must support both light (`#F8F5EE` Deccan Limestone / `#FFFFFF` / `#191614` / `#A62C1B` Pochampally Terracotta) and dark (`#12100E` Deccan Basalt / `#1C1917` / `#F5F0E6` / `#F59E0B` Marigold) modes using Tailwind `dark:` utilities without `!important`.
+8. **Licensing**: KaapiWerk source and project documentation use Apache-2.0 (`LICENSE`). Third-party package licenses are inventoried from installed package metadata in [docs/DEPENDENCY_LICENSES.md](docs/DEPENDENCY_LICENSES.md) and [docs/dependency-licenses.json](docs/dependency-licenses.json); run `bun install` then `npm run licenses` after dependency changes. Do not assume the project license covers external fonts, images, or other assets; check their individual terms.

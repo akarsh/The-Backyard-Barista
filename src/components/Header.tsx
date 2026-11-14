@@ -37,7 +37,7 @@ export function Header({
         </a>
 
         <nav
-          aria-label="Primary"
+          aria-label={t.accessibility.primaryNavigation}
           className="hidden lg:flex items-center gap-5 xl:gap-7 text-xs xl:text-sm font-medium text-[#5C534A] dark:text-[#B8AFA4]"
         >
           <a

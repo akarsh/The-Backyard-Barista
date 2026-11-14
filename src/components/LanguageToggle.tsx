@@ -1,8 +1,9 @@
-import { LanguageCode } from "../i18n/translations";
+import { AppTranslations, LanguageCode } from "../i18n/translations";
 
 interface LanguageToggleProps {
   language: LanguageCode;
   onChangeLanguage: (lang: LanguageCode) => void;
+  t: AppTranslations;
   compact?: boolean;
 }
 
@@ -19,12 +20,13 @@ const LANGUAGES: Array<{
 export function LanguageToggle({
   language,
   onChangeLanguage,
+  t,
   compact = false,
 }: LanguageToggleProps) {
   return (
     <div
       role="group"
-      aria-label="Language selector (English, Deutsch, Telugu)"
+      aria-label={t.accessibility.languageSelector}
       className="inline-flex items-center gap-0.5 p-0.5 sm:p-1 rounded-lg bg-[#EFE9DC] dark:bg-[#26221E] border border-[#191614]/10 dark:border-white/10 shrink-0"
     >
       {LANGUAGES.map(({ code, shortLabel, fullName }) => {

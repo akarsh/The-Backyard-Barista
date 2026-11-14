@@ -57,13 +57,13 @@ export function FloatingUtilityDock({
 
   return (
     <aside
-      aria-label="Language, theme, and scroll controls"
+      aria-label={t.accessibility.languageAndThemeControls}
       className="fixed right-2.5 sm:right-4 bottom-[70px] md:bottom-6 z-40 flex flex-col items-center gap-1 p-1 rounded-xl bg-white/92 dark:bg-[#1C1917]/92 backdrop-blur-md border border-[#191614]/15 dark:border-white/15 shadow-lg transition-colors"
     >
       {/* Language Switcher: EN / DE / తె */}
       <div
         role="group"
-        aria-label="Language selector (English, Deutsch, Telugu)"
+        aria-label={t.accessibility.languageSelector}
         className="flex flex-col items-center gap-0.5"
       >
         {LANGUAGES.map(({ code, shortLabel, fullName }) => {
@@ -97,7 +97,7 @@ export function FloatingUtilityDock({
       {/* Theme Switcher: Auto / Light / Dark */}
       <div
         role="group"
-        aria-label={`Color theme (${resolvedTheme})`}
+        aria-label={`${t.accessibility.colorTheme}: ${resolvedTheme === "dark" ? t.theme.dark : t.theme.light}`}
         className="flex flex-col items-center gap-0.5"
       >
         {themeOptions.map(({ mode, label, icon: Icon }) => {

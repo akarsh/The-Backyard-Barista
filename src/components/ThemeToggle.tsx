@@ -28,7 +28,7 @@ export function ThemeToggle({
   return (
     <div
       role="group"
-      aria-label={`Color theme (${resolvedTheme})`}
+      aria-label={`${t.accessibility.colorTheme}: ${resolvedTheme === "dark" ? t.theme.dark : t.theme.light}`}
       className="inline-flex items-center gap-0.5 p-1 rounded-lg bg-[#EFE9DC] dark:bg-[#26221E] border border-[#191614]/10 dark:border-white/10 shrink-0"
     >
       {options.map(({ mode, label, icon: Icon }) => {

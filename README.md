@@ -43,3 +43,21 @@ The interactive architecture diagram is hidden in regular browsing. To view it, 
 
 - [Architecture and system diagrams](docs/ARCHITECTURE.md)
 - [Brand and marketing guide](docs/BRAND_KIT.md)
+- [Third-party dependency license inventory](docs/DEPENDENCY_LICENSES.md)
+- [Machine-readable dependency license inventory](docs/dependency-licenses.json)
+
+## Licensing
+
+KaapiWerk's source code and project documentation are licensed under
+[Apache-2.0](LICENSE). The license's trademark clause does not grant permission
+to use the KaapiWerk name, logo, or other trademarks. Third-party dependencies
+are licensed separately; see the [dependency license inventory](docs/DEPENDENCY_LICENSES.md).
+The inventory does not establish reuse rights for images, fonts, or other
+non-package assets; verify their individual terms before redistributing them.
+
+After changing dependencies, install the locked tree and refresh the inventory:
+
+```sh
+bun install
+npm run licenses
+```

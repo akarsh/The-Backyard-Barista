@@ -23,3 +23,6 @@ Read `AGENTS.md`, `docs/ARCHITECTURE.md`, and `docs/BRAND_KIT.md` first for the 
 4. **Do Not Leak Secrets or PII**:
    - Keep `GEMINI_API_KEY` strictly inside `server.ts`.
    - Never persist GitHub PATs to storage or write unhashed emails/usernames to `recipe-journal.json`.
+5. **Licensing**:
+   - Project source and documentation are Apache-2.0 licensed; do not imply this grants rights to KaapiWerk trademarks.
+   - Refresh `docs/DEPENDENCY_LICENSES.md` and `.json` after `bun install` by running `npm run licenses` when dependencies change; assess fonts, images, and other assets separately.

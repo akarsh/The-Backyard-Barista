@@ -21,7 +21,7 @@ export function MobileBottomNav({
 
   return (
     <nav
-      aria-label="Mobile quick navigation"
+      aria-label={t.accessibility.mobileNavigation}
       className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-[#F8F5EE] dark:bg-[#12100E] border-t border-[#191614]/12 dark:border-white/10 pb-[env(safe-area-inset-bottom)] transition-colors"
     >
       <div
