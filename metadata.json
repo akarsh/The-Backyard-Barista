@@ -1,0 +1,6 @@
+{
+  "name": "Sable & Origin",
+  "description": "Specialty coffee crafting studio with an expert AI barista guiding single-origin beans, roast profiles, milk pairings, and precision brew recipes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
