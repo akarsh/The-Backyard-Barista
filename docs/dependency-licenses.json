@@ -1,16 +1,14 @@
 {
   "schemaVersion": 1,
   "generatedFrom": "installed node_modules package metadata",
-  "dependencyCount": 185,
+  "dependencyCount": 169,
   "licenseCounts": {
-    "0BSD": 2,
-    "Apache-2.0": 11,
-    "BSD-2-Clause": 1,
+    "0BSD": 1,
+    "Apache-2.0": 10,
     "BSD-3-Clause": 13,
     "BlueOak-1.0.0": 1,
-    "CC-BY-4.0": 1,
-    "ISC": 5,
-    "MIT": 149,
+    "ISC": 4,
+    "MIT": 138,
     "MPL-2.0": 2
   },
   "dependencies": [
@@ -358,25 +356,11 @@
       "location": "node_modules/array-flatten"
     },
     {
-      "name": "autoprefixer",
-      "version": "10.6.2",
-      "license": "MIT",
-      "dependencyType": "Development",
-      "location": "node_modules/autoprefixer"
-    },
-    {
       "name": "base64-js",
       "version": "1.5.1",
       "license": "MIT",
       "dependencyType": "Transitive",
       "location": "node_modules/base64-js"
-    },
-    {
-      "name": "baseline-browser-mapping",
-      "version": "2.11.37",
-      "license": "Apache-2.0",
-      "dependencyType": "Transitive",
-      "location": "node_modules/baseline-browser-mapping"
     },
     {
       "name": "bignumber.js",
@@ -391,13 +375,6 @@
       "license": "MIT",
       "dependencyType": "Transitive",
       "location": "node_modules/body-parser"
-    },
-    {
-      "name": "browserslist",
-      "version": "4.29.5",
-      "license": "MIT",
-      "dependencyType": "Transitive",
-      "location": "node_modules/browserslist"
     },
     {
       "name": "buffer-equal-constant-time",
@@ -426,13 +403,6 @@
       "license": "MIT",
       "dependencyType": "Transitive",
       "location": "node_modules/call-bound"
-    },
-    {
-      "name": "caniuse-lite",
-      "version": "1.0.30001826",
-      "license": "CC-BY-4.0",
-      "dependencyType": "Transitive",
-      "location": "node_modules/caniuse-lite"
     },
     {
       "name": "content-disposition",
@@ -512,13 +482,6 @@
       "location": "node_modules/detect-libc"
     },
     {
-      "name": "dotenv",
-      "version": "17.4.2",
-      "license": "BSD-2-Clause",
-      "dependencyType": "Runtime",
-      "location": "node_modules/dotenv"
-    },
-    {
       "name": "dunder-proto",
       "version": "1.0.1",
       "license": "MIT",
@@ -538,13 +501,6 @@
       "license": "MIT",
       "dependencyType": "Transitive",
       "location": "node_modules/ee-first"
-    },
-    {
-      "name": "electron-to-chromium",
-      "version": "1.5.485",
-      "license": "ISC",
-      "dependencyType": "Transitive",
-      "location": "node_modules/electron-to-chromium"
     },
     {
       "name": "encodeurl",
@@ -585,15 +541,8 @@
       "name": "esbuild",
       "version": "0.28.2",
       "license": "MIT",
-      "dependencyType": "Development",
-      "location": "node_modules/esbuild"
-    },
-    {
-      "name": "escalade",
-      "version": "3.2.0",
-      "license": "MIT",
       "dependencyType": "Transitive",
-      "location": "node_modules/escalade"
+      "location": "node_modules/esbuild"
     },
     {
       "name": "escape-html",
@@ -657,20 +606,6 @@
       "license": "MIT",
       "dependencyType": "Transitive",
       "location": "node_modules/forwarded"
-    },
-    {
-      "name": "fraction.js",
-      "version": "5.3.4",
-      "license": "MIT",
-      "dependencyType": "Transitive",
-      "location": "node_modules/fraction.js"
-    },
-    {
-      "name": "framer-motion",
-      "version": "12.43.0",
-      "license": "MIT",
-      "dependencyType": "Transitive",
-      "location": "node_modules/framer-motion"
     },
     {
       "name": "fresh",
@@ -911,27 +846,6 @@
       "location": "node_modules/mime"
     },
     {
-      "name": "motion-dom",
-      "version": "12.43.0",
-      "license": "MIT",
-      "dependencyType": "Transitive",
-      "location": "node_modules/motion-dom"
-    },
-    {
-      "name": "motion-utils",
-      "version": "12.39.0",
-      "license": "MIT",
-      "dependencyType": "Transitive",
-      "location": "node_modules/motion-utils"
-    },
-    {
-      "name": "motion",
-      "version": "12.43.0",
-      "license": "MIT",
-      "dependencyType": "Runtime",
-      "location": "node_modules/motion"
-    },
-    {
       "name": "ms",
       "version": "2.0.0",
       "license": "MIT",
@@ -972,13 +886,6 @@
       "license": "MIT",
       "dependencyType": "Transitive",
       "location": "node_modules/node-fetch"
-    },
-    {
-      "name": "node-releases",
-      "version": "2.0.64",
-      "license": "MIT",
-      "dependencyType": "Transitive",
-      "location": "node_modules/node-releases"
     },
     {
       "name": "object-inspect",
@@ -1028,13 +935,6 @@
       "license": "MIT",
       "dependencyType": "Transitive",
       "location": "node_modules/picomatch"
-    },
-    {
-      "name": "postcss-value-parser",
-      "version": "4.2.0",
-      "license": "MIT",
-      "dependencyType": "Transitive",
-      "location": "node_modules/postcss-value-parser"
     },
     {
       "name": "postcss",
@@ -1226,17 +1126,10 @@
       "location": "node_modules/@tailwindcss/oxide-wasm32-wasi/node_modules/tslib"
     },
     {
-      "name": "tslib",
-      "version": "2.9.1",
-      "license": "0BSD",
-      "dependencyType": "Transitive",
-      "location": "node_modules/tslib"
-    },
-    {
       "name": "tsx",
       "version": "4.23.15",
       "license": "MIT",
-      "dependencyType": "Development",
+      "dependencyType": "Transitive",
       "location": "node_modules/tsx"
     },
     {
@@ -1266,13 +1159,6 @@
       "license": "MIT",
       "dependencyType": "Transitive",
       "location": "node_modules/unpipe"
-    },
-    {
-      "name": "update-browserslist-db",
-      "version": "1.3.4",
-      "license": "MIT",
-      "dependencyType": "Transitive",
-      "location": "node_modules/update-browserslist-db"
     },
     {
       "name": "utils-merge",

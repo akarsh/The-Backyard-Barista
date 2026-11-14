@@ -1,9 +1,13 @@
-import "dotenv/config";
+import { existsSync } from "node:fs";
 import express from "express";
 import http from "node:http";
 import path from "node:path";
 import { GoogleGenAI, Type, ThinkingLevel } from "@google/genai";
 import { createServer as createViteServer } from "vite";
+
+if (existsSync(".env")) {
+  process.loadEnvFile(".env");
+}
 
 const PORT = Number(process.env.PORT) || 3000;
 const PRIMARY_MODEL = "gemini-4-hydrogen";
@@ -629,10 +633,9 @@ Instructions:
     const vite = await createViteServer({
       server: {
         middlewareMode: true,
-        hmr:
-          process.env.DISABLE_HMR === "true"
-            ? false
-            : { server: httpServer },
+        ...(process.env.DISABLE_HMR === "true"
+          ? { hmr: false }
+          : { ws: { server: httpServer } }),
       },
       appType: "spa",
     });

@@ -12,7 +12,7 @@
 ## 2. Tech Stack
 
 - **Frontend**: React 19, TypeScript 7, Vite 8 (`@tailwindcss/vite`, Tailwind CSS v4), `lucide-react` icons.
-- **Backend**: Node.js (ESM), Express 4, `tsx` (dev runner), `@google/genai` (server-side only).
+- **Backend**: Node.js 22 (ESM, native TypeScript stripping, `.env` loading, and `node --watch-path=server.ts` development mode), Express 4, `@google/genai` (server-side only).
 - **Theming**: Tailwind v4 class-based dark mode (`@custom-variant dark (&:where(.dark, .dark *));`) paired with `matchMedia("(prefers-color-scheme: dark)")` system detection and an inline pre-paint script in `index.html` to eliminate flash of unstyled content (FOUC).
 
 ## 3. Repository Structure

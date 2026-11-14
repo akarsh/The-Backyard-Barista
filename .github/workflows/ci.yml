@@ -1,4 +1,4 @@
-name: Verify Application
+name: KaapiWerk CI
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
 permissions: {}
 
 concurrency:
-  group: verify-${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 defaults:
@@ -19,20 +19,20 @@ defaults:
     shell: bash
 
 jobs:
-  verify:
-    name: Typecheck, Build & Server Smoke Test
+  build-and-test:
+    name: Type-check, Build & Production Smoke Test
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
       contents: read
 
     steps:
-      - name: Checkout repository
+      - name: Check out repository
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
 
-      - name: Set up Node.js 22
+      - name: Set up Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: "22"
@@ -46,13 +46,13 @@ jobs:
             npm install --no-audit --no-fund
           fi
 
-      - name: TypeScript typecheck
+      - name: Type-check
         run: npm run lint
 
-      - name: Production Vite build
+      - name: Build production assets
         run: npm run build
 
-      - name: Verify build output, static journal JSON & zero-PII hygiene
+      - name: Validate build output and journal privacy
         run: |
           set -euo pipefail
           test -f dist/index.html
@@ -71,7 +71,7 @@ jobs:
             }
           '
 
-      - name: Smoke test production server
+      - name: Smoke-test production server
         env:
           NODE_ENV: production
         run: |
@@ -123,7 +123,7 @@ jobs:
           ' "$CRAFT_OUT"
 
           {
-            echo "### Seggemu KaapiWerk Verification Summary"
+            echo "### KaapiWerk CI Summary"
             echo "- TypeScript check: Passed"
             echo "- Production Vite build: Passed (\`dist/index.html\` & \`dist/data/recipe-journal.json\`)"
             echo "- \`GET /\`: HTTP \`$HTTP_STATUS\`"
@@ -131,20 +131,20 @@ jobs:
             echo "- \`POST /api/barista/craft\` missing-key JSON error: HTTP \`$CRAFT_STATUS\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
-  public-repo-hygiene:
-    name: Public Repository Secret & Env Hygiene
+  repository-hygiene:
+    name: Repository Secret & Environment Hygiene
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
       contents: read
 
     steps:
-      - name: Checkout repository
+      - name: Check out repository
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
 
-      - name: Ensure no .env secret files are committed
+      - name: Reject committed environment files
         run: |
           set -euo pipefail
           BAD_ENV=$(git ls-files | grep -E '(^|/)\.env(\.|$)' | grep -v '\.env\.example$' || true)
@@ -154,7 +154,7 @@ jobs:
             exit 1
           fi
 
-      - name: Ensure Gemini SDK and API keys stay server-side only
+      - name: Keep Gemini SDK and API keys out of client code
         run: |
           set -euo pipefail
           if git grep -nE '@google/genai|GEMINI_API_KEY' -- src/; then
@@ -162,7 +162,7 @@ jobs:
             exit 1
           fi
 
-      - name: Scan tracked files for hardcoded Google API keys
+      - name: Scan for hard-coded Google API keys
         run: |
           set -euo pipefail
           if git grep -nE 'AIza[0-9A-Za-z_-]{35}' -- . ':!package-lock.json'; then

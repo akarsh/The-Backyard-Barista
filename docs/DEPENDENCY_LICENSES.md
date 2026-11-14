@@ -11,17 +11,15 @@ platform-specific optional dependencies may differ on other systems.
 
 ## Summary
 
-- `0BSD`: 2
-- `Apache-2.0`: 11
-- `BSD-2-Clause`: 1
+- `0BSD`: 1
+- `Apache-2.0`: 10
 - `BSD-3-Clause`: 13
 - `BlueOak-1.0.0`: 1
-- `CC-BY-4.0`: 1
-- `ISC`: 5
-- `MIT`: 149
+- `ISC`: 4
+- `MIT`: 138
 - `MPL-2.0`: 2
 
-**Installed package versions:** 185
+**Installed package versions:** 169
 
 ## Package inventory
 
@@ -76,17 +74,13 @@ platform-specific optional dependencies may differ on other systems.
 | `accepts` | `1.3.8` | `MIT` | Transitive |
 | `agent-base` | `7.1.4` | `MIT` | Transitive |
 | `array-flatten` | `1.1.1` | `MIT` | Transitive |
-| `autoprefixer` | `10.6.2` | `MIT` | Development |
 | `base64-js` | `1.5.1` | `MIT` | Transitive |
-| `baseline-browser-mapping` | `2.11.37` | `Apache-2.0` | Transitive |
 | `bignumber.js` | `9.3.1` | `MIT` | Transitive |
 | `body-parser` | `1.20.9` | `MIT` | Transitive |
-| `browserslist` | `4.29.5` | `MIT` | Transitive |
 | `buffer-equal-constant-time` | `1.0.1` | `BSD-3-Clause` | Transitive |
 | `bytes` | `3.1.2` | `MIT` | Transitive |
 | `call-bind-apply-helpers` | `1.0.2` | `MIT` | Transitive |
 | `call-bound` | `1.0.4` | `MIT` | Transitive |
-| `caniuse-lite` | `1.0.30001826` | `CC-BY-4.0` | Transitive |
 | `content-disposition` | `0.5.4` | `MIT` | Transitive |
 | `content-type` | `1.0.5` | `MIT` | Transitive |
 | `cookie-signature` | `1.0.7` | `MIT` | Transitive |
@@ -98,18 +92,15 @@ platform-specific optional dependencies may differ on other systems.
 | `depd` | `2.0.0` | `MIT` | Transitive |
 | `destroy` | `1.2.0` | `MIT` | Transitive |
 | `detect-libc` | `2.1.2` | `Apache-2.0` | Transitive |
-| `dotenv` | `17.4.2` | `BSD-2-Clause` | Runtime |
 | `dunder-proto` | `1.0.1` | `MIT` | Transitive |
 | `ecdsa-sig-formatter` | `1.0.11` | `Apache-2.0` | Transitive |
 | `ee-first` | `1.1.1` | `MIT` | Transitive |
-| `electron-to-chromium` | `1.5.485` | `ISC` | Transitive |
 | `encodeurl` | `2.0.3` | `MIT` | Transitive |
 | `enhanced-resolve` | `5.27.0` | `MIT` | Transitive |
 | `es-define-property` | `1.0.1` | `MIT` | Transitive |
 | `es-errors` | `1.3.0` | `MIT` | Transitive |
 | `es-object-atoms` | `1.1.2` | `MIT` | Transitive |
-| `esbuild` | `0.28.2` | `MIT` | Development |
-| `escalade` | `3.2.0` | `MIT` | Transitive |
+| `esbuild` | `0.28.2` | `MIT` | Transitive |
 | `escape-html` | `1.0.3` | `MIT` | Transitive |
 | `etag` | `1.8.1` | `MIT` | Transitive |
 | `express` | `4.22.3` | `MIT` | Runtime |
@@ -119,8 +110,6 @@ platform-specific optional dependencies may differ on other systems.
 | `finalhandler` | `1.3.2` | `MIT` | Transitive |
 | `formdata-polyfill` | `4.0.10` | `MIT` | Transitive |
 | `forwarded` | `0.2.0` | `MIT` | Transitive |
-| `fraction.js` | `5.3.4` | `MIT` | Transitive |
-| `framer-motion` | `12.43.0` | `MIT` | Transitive |
 | `fresh` | `0.5.2` | `MIT` | Transitive |
 | `fsevents` | `2.3.3` | `MIT` | Transitive |
 | `function-bind` | `1.1.2` | `MIT` | Transitive |
@@ -155,16 +144,12 @@ platform-specific optional dependencies may differ on other systems.
 | `mime-db` | `1.52.0` | `MIT` | Transitive |
 | `mime-types` | `2.1.35` | `MIT` | Transitive |
 | `mime` | `1.6.0` | `MIT` | Transitive |
-| `motion-dom` | `12.43.0` | `MIT` | Transitive |
-| `motion-utils` | `12.39.0` | `MIT` | Transitive |
-| `motion` | `12.43.0` | `MIT` | Runtime |
 | `ms` | `2.0.0` | `MIT` | Transitive |
 | `ms` | `2.1.3` | `MIT` | Transitive |
 | `nanoid` | `3.3.20` | `MIT` | Transitive |
 | `negotiator` | `0.6.3` | `MIT` | Transitive |
 | `node-domexception` | `1.0.0` | `MIT` | Transitive |
 | `node-fetch` | `3.3.2` | `MIT` | Transitive |
-| `node-releases` | `2.0.64` | `MIT` | Transitive |
 | `object-inspect` | `1.13.4` | `MIT` | Transitive |
 | `on-finished` | `2.4.2` | `MIT` | Transitive |
 | `p-retry` | `4.6.2` | `MIT` | Transitive |
@@ -172,7 +157,6 @@ platform-specific optional dependencies may differ on other systems.
 | `path-to-regexp` | `0.1.13` | `MIT` | Transitive |
 | `picocolors` | `1.1.1` | `ISC` | Transitive |
 | `picomatch` | `4.0.7` | `MIT` | Transitive |
-| `postcss-value-parser` | `4.2.0` | `MIT` | Transitive |
 | `postcss` | `8.5.33` | `MIT` | Transitive |
 | `protobufjs` | `7.6.6` | `BSD-3-Clause` | Transitive |
 | `proxy-addr` | `2.0.8` | `MIT` | Transitive |
@@ -200,13 +184,11 @@ platform-specific optional dependencies may differ on other systems.
 | `tinyglobby` | `0.2.17` | `MIT` | Transitive |
 | `toidentifier` | `1.0.1` | `MIT` | Transitive |
 | `tslib` | `2.8.1` | `0BSD` | Transitive |
-| `tslib` | `2.9.1` | `0BSD` | Transitive |
-| `tsx` | `4.23.15` | `MIT` | Development |
+| `tsx` | `4.23.15` | `MIT` | Transitive |
 | `type-is` | `1.6.18` | `MIT` | Transitive |
 | `typescript` | `7.0.2` | `Apache-2.0` | Development |
 | `undici-types` | `6.21.0` | `MIT` | Transitive |
 | `unpipe` | `1.0.0` | `MIT` | Transitive |
-| `update-browserslist-db` | `1.3.4` | `MIT` | Transitive |
 | `utils-merge` | `1.0.1` | `MIT` | Transitive |
 | `vary` | `1.1.2` | `MIT` | Transitive |
 | `vite` | `8.3.8` | `MIT` | Runtime |
