@@ -57,6 +57,9 @@ const DEFAULT_PREFERENCES: CraftPreferences = {
 export default function App() {
   const { themeMode, resolvedTheme, setThemeMode } = useTheme();
   const { language, setLanguage, t } = useLanguage();
+  const [isDeveloperMode] = useState(
+    () => new URLSearchParams(window.location.search).get("developer") === "1"
+  );
   const [preferences, setPreferences] =
     useState<CraftPreferences>(DEFAULT_PREFERENCES);
   const [recipe, setRecipe] = useState<CraftedRecipe>(INITIAL_RECIPE);
@@ -549,6 +552,7 @@ export default function App() {
         savedCount={userEntries.length}
         currentUser={currentUser}
         onOpenSaved={() => setIsDrawerOpen(true)}
+        showSystemMap={isDeveloperMode}
         t={t}
       />
 
@@ -613,7 +617,7 @@ export default function App() {
           t={t}
         />
 
-        <ArchitectureDiagram t={t} />
+        {isDeveloperMode && <ArchitectureDiagram t={t} />}
       </main>
 
       <footer className="border-t border-[#191614]/10 dark:border-white/10 pb-24 md:pb-10 bg-[#F8F5EE] dark:bg-[#12100E]">
@@ -650,12 +654,14 @@ export default function App() {
             >
               {t.nav.origins}
             </a>
-            <a
-              href="#how-it-works"
-              className="hover:text-[#191614] dark:hover:text-[#F5F0E6] transition-colors"
-            >
-              {t.nav.systemMap}
-            </a>
+            {isDeveloperMode && (
+              <a
+                href="#how-it-works"
+                className="hover:text-[#191614] dark:hover:text-[#F5F0E6] transition-colors"
+              >
+                {t.nav.systemMap}
+              </a>
+            )}
             <button
               type="button"
               onClick={() => setIsDrawerOpen(true)}
@@ -676,7 +682,7 @@ export default function App() {
         t={t}
       />
 
-      <MobileBottomNav t={t} />
+      <MobileBottomNav showSystemMap={isDeveloperMode} t={t} />
 
       <SavedBrewsDrawer
         isOpen={isDrawerOpen}

@@ -1,6 +1,6 @@
-# Brand & Marketing Toolkit Guide — Seggemu KaapiWerk
+# Brand & Marketing Toolkit Guide — KaapiWerk
 
-> Official brand identity, visual guidelines, print specifications, and trilingual marketing copy toolkit for **Seggemu KaapiWerk** (`సెగ్గెము ఆకర్ష్ · కాఫీ బారిస్టా` / `Akarsh Seggemu · Coffee Barista`).
+> Official brand identity, visual guidelines, print specifications, and trilingual marketing copy toolkit for **KaapiWerk** (`కాపీవెర్క్` / `Akarsh Seggemu · Coffee Barista`).
 >
 > **Copyright & Trademark Notice**: © 2026 **Akarsh Seggemu** (`ఆకర్ష్ సెగ్గెము`). All original geometric brand marks, names, and copy belong to Akarsh Seggemu.
 
@@ -8,9 +8,9 @@
 
 ## 1. Brand Essence & Naming
 
-### Brand Name: **Seggemu KaapiWerk**
-- **Telugu Identity**: `సెగ్గెము కాపీవెర్క్` · `సెగ్గెము ఆకర్ష్ · కాఫీ బారిస్టా`
-- **German / Berlin Identity**: `Seggemu KaapiWerk · Spezialitätenrösterei`
+### Brand Name: **KaapiWerk**
+- **Telugu Identity**: `కాపీవెర్క్` · `ఆకర్ష్ సెగ్గెము · కాఫీ బారిస్టా`
+- **German / Berlin Identity**: `KaapiWerk · Berliner Rösterei`
 - **Phonetic Architecture**:
   - **Seggemu** (*SEG-geh-moo* / `సెగ్గెము`): Founder surname rooted in Telangana, anchoring personal craftsmanship and ownership.
   - **Kaapi** (*KAA-pee* / `కాపీ`): South Indian cultural homage to slow, aromatic filter coffee hospitality.
@@ -27,7 +27,7 @@
 
 ## 2. Print-Ready Logo Specifications (`src/components/BrandLogo.tsx`)
 
-The **Seggemu KaapiWerk** mark is a 100% original geometric SVG built exclusively from crisp, print-safe primitives on a `64 × 64` grid:
+The **KaapiWerk** mark is a 100% original geometric SVG built exclusively from crisp, print-safe primitives on a `64 × 64` grid:
 1. **Octagonal Seal** — Deccan / Kakatiya stone-architecture chamfered perimeter (`points="20,4 44,4 60,20 60,44 44,60 20,60 4,44 4,20"`) with Limestone/Basalt backing fill.
 2. **V60 Pour-Over Funnel & Collar** — Sharp diagonal extraction cone (`points="18,17 46,17 37,29 27,29"`) crowned by a Bauhaus collar bar (`x1=13..51`) and center extraction drop.
 3. **Pochampally Diamond Coffee Bean** — Telangana handloom-inspired diamond drop (`points="32,35 44,44.5 32,54 20,44.5"`) carved by a negative-space roasted coffee bean S-curve seam (`M32 37.5 C30 41.5 34 47.5 32 51.5`).
@@ -85,7 +85,7 @@ The **Seggemu KaapiWerk** mark is a 100% original geometric SVG built exclusivel
 ## 5. Packaging & Merchandising Application Specs
 
 1. **250g Whole-Bean Bag Label (`70 mm × 105 mm` vertical card)**:
-   - **Top**: Centered octagonal logo mark (`20 mm`) + `SEGGEMU KAAPIWERK` wordmark.
+   - **Top**: Centered octagonal logo mark (`20 mm`) + `KAAPIWERK` wordmark.
    - **Body**: Origin Lot (e.g., `Worka Sakaro Reserve`), Elevation (`2,150m`), Process (`Washed`), 3 tasting notes separated by middle dots (`·`).
    - **Recipe Stamp**: Bottom monospace band (`16g · 256ml · 95°C · 2:45`).
    - **Footer**: `© 2026 Akarsh Seggemu · Berlin · భాగ్యనగరం`.
@@ -99,9 +99,9 @@ The **Seggemu KaapiWerk** mark is a 100% original geometric SVG built exclusivel
 ## 6. Ready-to-Use Trilingual Marketing Copy Templates
 
 ### Social Bio / Storefront Tagline
-- **English**: *Seggemu KaapiWerk by Akarsh Seggemu — Telangana hospitality meets Berlin micro-roastery precision. Craft your cup by flavor, gram by gram.*
-- **Deutsch**: *Seggemu KaapiWerk von Akarsh Seggemu — Südindische Telangana-Gastfreundschaft trifft auf Berliner Mikrorösterei-Präzision.*
-- **తెలుగు**: *సెగ్గెము ఆకర్ష్ · సెగ్గెము కాపీవెర్క్ — తెలంగాణ కాఫీ ఆతిథ్యం మరియు బెర్లిన్ రోస్టరీ కచ్చితత్వంతో మీ అభిరుచికి తగిన ప్రత్యేక కాఫీ.*
+- **English**: *KaapiWerk by Akarsh Seggemu — Telangana hospitality meets Berlin micro-roastery craft.*
+- **Deutsch**: *KaapiWerk von Akarsh Seggemu — Telangana-Kaffee trifft Berliner Rösthandwerk.*
+- **తెలుగు**: *ఆకర్ష్ సెగ్గెము · కాపీవెర్క్ — తెలంగాణ కాఫీ ఆతిథ్యం, బెర్లిన్ రోస్టరీ నైపుణ్యం.*
 
 ### Launch Post Caption
 - **English**: *New on bar: dial in your flavor direction, lock your roast curve, and follow our live gram-by-gram brew timer—built for home espresso bars and V60 rituals alike.*

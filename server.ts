@@ -55,7 +55,7 @@ function sanitizeInputText(val: unknown, maxLen = 300): string {
     .slice(0, maxLen);
 }
 
-const BARISTA_PERSONA = `You are Milo, Head Barista and Green Buyer at Seggemu KaapiWerk (సెగ్గెము ఆకర్ష్ · కాఫీ బారిస్టా), Akarsh Seggemu's Telangana-rooted, Berlin-inspired modern third-wave specialty coffee studio.
+const BARISTA_PERSONA = `You are Milo, Head Barista and Green Buyer at KaapiWerk (కాపీవెర్క్), Akarsh Seggemu's Telangana-rooted, Berlin-inspired modern third-wave specialty coffee studio.
 Your vibe is warm, culturally dialed-in, sensory, and genuinely helpful—never pretentious or robotic. You speak like a seasoned specialty barista who knows extraction chemistry, roast development curves, water mineral balance, and plant-milk textural chemistry inside out.
 Give concrete, actionable, and sensory guidance tailored to the guest's flavor preferences, roast profile, bean selection, and milk choice. Keep prose concise and vivid.`;
 
@@ -637,7 +637,7 @@ Instructions:
   }
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Seggemu KaapiWerk studio running on http://localhost:${PORT}`);
+    console.log(`KaapiWerk studio running on http://localhost:${PORT}`);
   });
 }
 

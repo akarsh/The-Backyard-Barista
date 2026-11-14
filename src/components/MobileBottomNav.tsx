@@ -2,23 +2,31 @@ import { BookOpen, Coffee, GitBranch, SlidersHorizontal } from "lucide-react";
 import { AppTranslations } from "../i18n/translations";
 
 interface MobileBottomNavProps {
+  showSystemMap: boolean;
   t: AppTranslations;
 }
 
-export function MobileBottomNav({ t }: MobileBottomNavProps) {
+export function MobileBottomNav({
+  showSystemMap,
+  t,
+}: MobileBottomNavProps) {
   const navItems = [
     { href: "#studio", label: t.nav.mobileStudio, icon: SlidersHorizontal },
     { href: "#journal", label: t.nav.mobileJournal, icon: BookOpen },
     { href: "#origins", label: t.nav.mobileOrigins, icon: Coffee },
-    { href: "#how-it-works", label: t.nav.mobileSystem, icon: GitBranch },
-  ] as const;
+    ...(showSystemMap
+      ? [{ href: "#how-it-works", label: t.nav.mobileSystem, icon: GitBranch }]
+      : []),
+  ];
 
   return (
     <nav
       aria-label="Mobile quick navigation"
       className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-[#F8F5EE] dark:bg-[#12100E] border-t border-[#191614]/12 dark:border-white/10 pb-[env(safe-area-inset-bottom)] transition-colors"
     >
-      <div className="grid grid-cols-4 h-14">
+      <div
+        className={`grid ${showSystemMap ? "grid-cols-4" : "grid-cols-3"} h-14`}
+      >
         {navItems.map(({ href, label, icon: Icon }) => (
           <a
             key={href}

@@ -4,7 +4,7 @@ interface BrandLogoProps {
 }
 
 /**
- * Seggemu KaapiWerk Original Print-Ready Stamp (100% Copyright-Free):
+ * KaapiWerk Original Print-Ready Stamp (100% Copyright-Free):
  * - Octagonal Kakatiya / Bauhaus chamfered seal with subtle backing fill
  * - Terracotta V60 pour-over cone & extraction drip stream
  * - Pochampally ikat diamond bean with a crisp negative-space S-curve seam

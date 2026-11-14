@@ -7,6 +7,7 @@ interface HeaderProps {
   savedCount: number;
   currentUser: JournalUser | null;
   onOpenSaved: () => void;
+  showSystemMap: boolean;
   t: AppTranslations;
 }
 
@@ -14,6 +15,7 @@ export function Header({
   savedCount,
   currentUser,
   onOpenSaved,
+  showSystemMap,
   t,
 }: HeaderProps) {
   return (
@@ -62,12 +64,14 @@ export function Header({
           >
             {t.nav.roastMilk}
           </a>
-          <a
-            href="#how-it-works"
-            className="hover:text-[#191614] dark:hover:text-[#F5F0E6] transition-colors whitespace-nowrap shrink-0 underline-offset-4 hover:underline"
-          >
-            {t.nav.systemMap}
-          </a>
+          {showSystemMap && (
+            <a
+              href="#how-it-works"
+              className="hover:text-[#191614] dark:hover:text-[#F5F0E6] transition-colors whitespace-nowrap shrink-0 underline-offset-4 hover:underline"
+            >
+              {t.nav.systemMap}
+            </a>
+          )}
         </nav>
 
         <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">

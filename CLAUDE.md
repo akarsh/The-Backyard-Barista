@@ -4,7 +4,7 @@ Read `AGENTS.md`, `docs/ARCHITECTURE.md`, and `docs/BRAND_KIT.md` first for the 
 
 ## Quick Context
 
-- **App Name**: **Seggemu KaapiWerk** (`సెగ్గెము ఆకర్ష్ · కాఫీ బారిస్టా` / `Akarsh Seggemu · Coffee Barista`), copyrighted by **Akarsh Seggemu**.
+- **App Name**: **KaapiWerk** (`కాపీవెర్క్` / `Akarsh Seggemu · Coffee Barista`), copyrighted by **Akarsh Seggemu**.
 - **Runtime**: Works both as a full-stack Express + Gemini app (`server.ts`) and as a zero-cost static website on GitHub Pages (`dist/` + `src/utils/staticBarista.ts` + `public/data/recipe-journal.json`).
 
 ## Implementation Rules

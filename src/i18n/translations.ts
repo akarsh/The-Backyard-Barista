@@ -219,7 +219,7 @@ export interface AppTranslations {
 
 export const TRANSLATIONS: Record<LanguageCode, AppTranslations> = {
   en: {
-    brandName: "Seggemu KaapiWerk",
+    brandName: "KaapiWerk",
     brandSubline: "Akarsh Seggemu · Coffee Barista",
     nav: {
       studio: "Craft Studio",
@@ -241,8 +241,8 @@ export const TRANSLATIONS: Record<LanguageCode, AppTranslations> = {
     },
     scrollToTop: "Scroll to top",
     hero: {
-      eyebrow: "Akarsh Seggemu · Coffee Barista · Berlin · Bhagyanagaram",
-      nativeLine: "సెగ్గెము కాపీవెర్క్ · భాగ్యనగరం · Berliner Rösterei",
+      eyebrow: "Akarsh Seggemu · Berlin · Bhagyanagaram",
+      nativeLine: "Telangana Kaapi · Berliner Rösterei",
       headline: "Craft your signature cup, guided by flavor.",
       description:
         "Blending South Indian Telangana Kaapi hospitality with Berlin micro-roastery precision. Tell Milo your preferred flavor notes, roast curve, and milk style for exact gram-by-gram recipes.",
@@ -253,7 +253,7 @@ export const TRANSLATIONS: Record<LanguageCode, AppTranslations> = {
         "Custom Roast Development",
         "Plant & Dairy Microfoam Pairing",
       ],
-      cardCaptionTitle: "Seggemu KaapiWerk Bar",
+      cardCaptionTitle: "KaapiWerk Bar",
       cardCaptionSub: "93°C Precision Bloom · 1:16 Extraction",
       metrics: {
         lotsLabel: "Curated Origin Lots",
@@ -456,13 +456,13 @@ export const TRANSLATIONS: Record<LanguageCode, AppTranslations> = {
       loadRecipe: "Load Recipe",
     },
     footer: {
-      copyright: "© 2026 Akarsh Seggemu · Seggemu KaapiWerk",
-      nativeLine: "సెగ్గెము కాపీవెర్క్ · Berlin · భాగ్యనగరం",
+      copyright: "© 2026 Akarsh Seggemu · KaapiWerk",
+      nativeLine: "Telangana Kaapi · Berlin · Bhagyanagaram",
       quickDrawer: "Quick Drawer",
     },
   },
   de: {
-    brandName: "Seggemu KaapiWerk",
+    brandName: "KaapiWerk",
     brandSubline: "Akarsh Seggemu · Kaffeeröster & Barista",
     nav: {
       studio: "Brüh-Studio",
@@ -484,8 +484,8 @@ export const TRANSLATIONS: Record<LanguageCode, AppTranslations> = {
     },
     scrollToTop: "Nach oben scrollen",
     hero: {
-      eyebrow: "Akarsh Seggemu · Kaffeeröster & Barista · Berlin · Bhagyanagaram",
-      nativeLine: "సెగ్గెము ఆకర్ష్ · సెగ్గెము కాపీవెర్క్ · భాగ్యనగరం",
+      eyebrow: "Akarsh Seggemu · Berlin · Bhagyanagaram",
+      nativeLine: "Telangana-Kaapi · Berliner Rösterei",
       headline: "Kreiere deine persönliche Tasse, geführt vom Geschmack.",
       description:
         "Südindische Telangana-Kaapi-Gastfreundschaft trifft auf Berliner Mikrorösterei-Präzision. Nenne Milo deine gewünschten Aromen, deine Röstkurve und deine Milchwahl für grammgenaue Brührezepte.",
@@ -496,7 +496,7 @@ export const TRANSLATIONS: Record<LanguageCode, AppTranslations> = {
         "Präzise Röstentwicklung",
         "Milch- & Pflanzenschaum-Pairing",
       ],
-      cardCaptionTitle: "Seggemu KaapiWerk Bar",
+      cardCaptionTitle: "KaapiWerk Bar",
       cardCaptionSub: "93°C Präzisions-Bloom · 1:16 Extraktion",
       metrics: {
         lotsLabel: "Ausgewählte Origin-Lots",
@@ -703,14 +703,14 @@ export const TRANSLATIONS: Record<LanguageCode, AppTranslations> = {
       loadRecipe: "Rezept laden",
     },
     footer: {
-      copyright: "© 2026 Akarsh Seggemu · Seggemu KaapiWerk",
-      nativeLine: "సెగ్గెము కాపీవెర్క్ · Spezialitätenrösterei · భాగ్యనగరం",
+      copyright: "© 2026 Akarsh Seggemu · KaapiWerk",
+      nativeLine: "Telangana-Kaapi · Berlin · Bhagyanagaram",
       quickDrawer: "Schnellzugriff",
     },
   },
   te: {
-    brandName: "సెగ్గెము కాపీవెర్క్",
-    brandSubline: "సెగ్గెము ఆకర్ష్ · కాఫీ బారిస్టా",
+    brandName: "కాపీవెర్క్",
+    brandSubline: "ఆకర్ష్ సెగ్గెము · కాఫీ బారిస్టా",
     nav: {
       studio: "క్రాఫ్ట్ స్టూడియో",
       journal: "రెసిపీ జర్నల్",
@@ -731,8 +731,8 @@ export const TRANSLATIONS: Record<LanguageCode, AppTranslations> = {
     },
     scrollToTop: "పైకి స్క్రోల్ చేయండి",
     hero: {
-      eyebrow: "సెగ్గెము ఆకర్ష్ · కాఫీ బారిస్టా · బెర్లిన్ · భాగ్యనగరం",
-      nativeLine: "Seggemu KaapiWerk · Berliner Röstkunst · Coffee Roastery",
+      eyebrow: "ఆకర్ష్ సెగ్గెము · బెర్లిన్ · భాగ్యనగరం",
+      nativeLine: "తెలంగాణ కాఫీ · బెర్లిన్ రోస్టరీ",
       headline: "మీ అభిరుచికి తగిన ప్రత్యేక కాఫీని రూపొందించండి.",
       description:
         "తెలంగాణ ఆతిథ్య కాఫీ రుచిని బెర్లిన్ మైక్రో-రోస్టరీ కచ్చితత్వంతో కలిపి రూపొందించిన స్టూడియో. మీకు ఇష్టమైన రుచులు, రోస్ట్ మరియు పాల ఎంపికను మైలోకు చెప్పండి.",
@@ -743,7 +743,7 @@ export const TRANSLATIONS: Record<LanguageCode, AppTranslations> = {
         "కచ్చితమైన రోస్ట్ ప్రొఫైల్స్",
         "మిల్క్ & ప్లాంట్ మైక్రోఫోమ్",
       ],
-      cardCaptionTitle: "సెగ్గెము కాపీవెర్క్ బార్",
+      cardCaptionTitle: "కాపీవెర్క్ బార్",
       cardCaptionSub: "93°C కచ్చితమైన బ్లూమ్ · 1:16 ఎక్స్‌ట్రాక్షన్",
       metrics: {
         lotsLabel: "ఎంచుకున్న ఆరిజిన్ లాట్స్",
@@ -946,8 +946,8 @@ export const TRANSLATIONS: Record<LanguageCode, AppTranslations> = {
       loadRecipe: "రెసిపీ లోడ్ చేయండి",
     },
     footer: {
-      copyright: "© 2026 ఆకర్ష్ సెగ్గెము (Akarsh Seggemu) · సెగ్గెము కాపీవెర్క్",
-      nativeLine: "Seggemu KaapiWerk · బెర్లిన్ · భాగ్యనగరం కాఫీ స్టూడియో",
+      copyright: "© 2026 ఆకర్ష్ సెగ్గెము · కాపీవెర్క్",
+      nativeLine: "తెలంగాణ కాఫీ · బెర్లిన్ · భాగ్యనగరం",
       quickDrawer: "త్వరిత డ్రాయర్",
     },
   },

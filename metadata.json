@@ -1,6 +1,6 @@
 {
-  "name": "Sable & Origin",
-  "description": "Specialty coffee crafting studio with an expert AI barista guiding single-origin beans, roast profiles, milk pairings, and precision brew recipes.",
+  "name": "KaapiWerk",
+  "description": "A Telangana-rooted, Berlin-inspired coffee studio. Explore single-origin beans, choose roast and milk pairings, and craft precise brews with your AI barista.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

@@ -43,7 +43,7 @@ export function formatEmojiRecipeSummary(recipe: CraftedRecipe): string {
     "",
     `💡 Barista Tip: ${recipe.proTip}`,
     "",
-    "— Crafted with Seggemu KaapiWerk · Akarsh Seggemu (సెగ్గెము ఆకర్ష్ · కాఫీ బారిస్టా)",
+    "— Crafted with KaapiWerk · Akarsh Seggemu (ఆకర్ష్ సెగ్గెము · కాఫీ బారిస్టా)",
   ].join("\n");
 }
 

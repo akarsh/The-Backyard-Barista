@@ -1,10 +1,10 @@
 # AGENTS.md — AI Coding Agent Guide
 
-> Universal orientation specification for Claude, GPT, Gemini, Codex, Cursor, and any automated engineering agent inspecting or modifying **Seggemu KaapiWerk** (`సెగ్గెము ఆకర్ష్ · కాఫీ బారిస్టా` / `Akarsh Seggemu · Coffee Barista`).
+> Universal orientation specification for Claude, GPT, Gemini, Codex, Cursor, and any automated engineering agent inspecting or modifying **KaapiWerk** (`కాపీవెర్క్` / `Akarsh Seggemu · Coffee Barista`).
 
 ## 1. Project Identity & Purpose
 
-- **Brand**: Seggemu KaapiWerk — Telangana-rooted (`Kaapi`), Berlin-inspired (`Werk`) specialty coffee crafting studio created by **Akarsh Seggemu**.
+- **Brand**: KaapiWerk — Telangana-rooted (`Kaapi`), Berlin-inspired (`Werk`) specialty coffee studio created by **Akarsh Seggemu**.
 - **Dual-Mode Runtime**:
   1. **Live AI Server Mode** (`npm run dev` or `npm start`): Express (`server.ts`) serves Vite/React + rate-limited `/api/barista/*` endpoints backed by Google `@google/genai`.
   2. **Zero-Cost Static Mode** (`npm run build` → `dist/`, GitHub Pages `*.github.io`): Pure static SPA. When `/api/barista/*` returns HTTP `404`/`405` or network fallback, the client seamlessly switches to `src/utils/staticBarista.ts` and loads/syncs `public/data/recipe-journal.json` with zero cloud database or GCP cost.

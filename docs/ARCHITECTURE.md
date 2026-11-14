@@ -1,6 +1,8 @@
-# Seggemu KaapiWerk — Architecture & System Diagrams
+# KaapiWerk — Architecture & System Diagrams
 
-**Seggemu KaapiWerk** (`సెగ్గెము ఆకర్ష్ · కాఫీ బారిస్టా`) is a trilingual (English / Deutsch / తెలుగు) specialty coffee crafting studio designed to run identically on a Node/Express server with Gemini AI or as a $0 static website hosted on GitHub Pages (`github.io`).
+**KaapiWerk** (`కాపీవెర్క్`) by Akarsh Seggemu is a trilingual (English / Deutsch / తెలుగు) specialty coffee crafting studio designed to run identically on a Node/Express server with Gemini AI or as a $0 static website hosted on GitHub Pages (`github.io`).
+
+The interactive system map is a developer-mode view, available at `/?developer=1#how-it-works`; it is omitted from the regular page and navigation. This URL flag controls visibility only and is not an authorization boundary.
 
 ---
 
