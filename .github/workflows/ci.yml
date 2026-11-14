@@ -6,6 +6,12 @@ on:
   pull_request:
     branches: [main, master]
   workflow_dispatch:
+    inputs:
+      static_site_smoke:
+        description: Verify the static site and barista fallback without Gemini
+        required: false
+        type: boolean
+        default: false
 
 # Deny all permissions at workflow level; grant minimal read-only per job
 permissions: {}
@@ -37,14 +43,13 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Install dependencies
-        run: |
-          set -euo pipefail
-          if [ -f package-lock.json ]; then
-            npm ci --no-audit --no-fund
-          else
-            npm install --no-audit --no-fund
-          fi
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: "1.4.4"
+
+      - name: Install locked dependencies
+        run: bun install --frozen-lockfile
 
       - name: Type-check
         run: npm run lint
@@ -59,7 +64,7 @@ jobs:
           test -f dist/data/recipe-journal.json
           node -e '
             const fs = require("fs");
-            const journal = JSON.parse(fs.readFileSync("public/data/recipe-journal.json", "utf8"));
+            const journal = JSON.parse(fs.readFileSync("dist/data/recipe-journal.json", "utf8"));
             if (typeof journal.version !== "number" || !Array.isArray(journal.entries)) {
               throw new Error("Invalid recipe-journal.json schema");
             }
@@ -70,6 +75,56 @@ jobs:
               }
             }
           '
+
+      - name: Smoke-test static fallback without Gemini
+        if: github.event_name == 'workflow_dispatch' && inputs.static_site_smoke
+        run: |
+          set -euo pipefail
+          unset GEMINI_API_KEY
+
+          bun run vite preview --host 127.0.0.1 --port 4173 --strictPort &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+
+          for _ in $(seq 1 20); do
+            if curl -sf http://127.0.0.1:4173/ > /dev/null; then
+              break
+            fi
+            sleep 1
+          done
+
+          curl --fail --silent --show-error --output /dev/null \
+            http://127.0.0.1:4173/
+          API_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X POST http://127.0.0.1:4173/api/barista/craft \
+            -H "Content-Type: application/json" \
+            -d '{}')
+          echo "POST /api/barista/craft without API server -> $API_STATUS"
+          test "$API_STATUS" = "404"
+
+          bun -e '
+            import { chatStaticBarista, craftStaticRecipe } from "./src/utils/staticBarista.ts";
+            const preferences = {
+              flavors: ["Sweet", "Chocolaty"],
+              brewMethod: "Flat White",
+              servingTemp: "Hot",
+              bodyPreference: "Balanced",
+              selectedOrigin: "Barista Choice",
+              selectedRoast: "Barista Choice",
+              selectedMilk: "Barista Oat",
+              customNote: "",
+            };
+            const recipe = craftStaticRecipe(preferences, "en");
+            const reply = chatStaticBarista("Make it iced", recipe, "en");
+            if (!recipe.title || !recipe.brewRecipe.steps.length) {
+              throw new Error("Static recipe fallback did not produce a recipe.");
+            }
+            if (!reply.shouldUpdateRecipe || reply.updatedRecipe?.brewRecipe.servingTemp !== "Iced") {
+              throw new Error("Static chat fallback did not update the recipe.");
+            }
+          '
+
+          echo "- Optional static no-Gemini fallback: Passed" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Smoke-test production server
         env:
@@ -165,7 +220,7 @@ jobs:
       - name: Scan for hard-coded Google API keys
         run: |
           set -euo pipefail
-          if git grep -nE 'AIza[0-9A-Za-z_-]{35}' -- . ':!package-lock.json'; then
+          if git grep -nE 'AIza[0-9A-Za-z_-]{35}' -- .; then
             echo "Potential hardcoded API key detected in tracked files."
             exit 1
           fi
