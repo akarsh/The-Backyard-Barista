@@ -12,6 +12,18 @@
     scroll-behavior: smooth;
     background-color: #F7F6F3;
     color: #161514;
+    overflow-x: clip;
+  }
+
+  body {
+    overflow-x: clip;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  @media (min-width: 768px) {
+    html {
+      scroll-padding-top: 5rem;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {

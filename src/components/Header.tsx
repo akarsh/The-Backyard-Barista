@@ -13,18 +13,18 @@ export function Header({
   onOpenSaved,
 }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-30 bg-[#F7F6F3]/95 backdrop-blur-sm border-b border-[#161514]/10">
-      <div className="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between gap-8">
+    <header className="relative md:sticky md:top-0 z-30 bg-[#F7F6F3] border-b border-[#161514]/10">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 h-14 md:h-16 flex items-center justify-between gap-4 md:gap-8">
         <a
           href="#top"
-          className="font-serif text-xl font-semibold tracking-tight text-[#161514] whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9A3412] rounded-sm"
+          className="font-serif text-lg sm:text-xl font-semibold tracking-tight text-[#161514] whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9A3412] rounded-sm"
         >
           Sable &amp; Origin
         </a>
 
         <nav
           aria-label="Primary"
-          className="hidden md:flex items-center gap-7 text-sm font-medium text-[#57534E]"
+          className="hidden md:flex items-center gap-5 lg:gap-7 text-xs lg:text-sm font-medium text-[#57534E]"
         >
           <a
             href="#studio"
@@ -56,7 +56,7 @@ export function Header({
           <button
             type="button"
             onClick={onOpenSaved}
-            className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-[#161514] rounded-lg hover:bg-[#2C2A28] transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9A3412] focus-visible:ring-offset-2 cursor-pointer"
+            className="inline-flex items-center gap-2 min-h-[40px] px-3.5 sm:px-4 py-2 text-xs font-semibold text-white bg-[#161514] rounded-lg hover:bg-[#2C2A28] transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9A3412] focus-visible:ring-offset-2 cursor-pointer"
           >
             <BookOpen className="w-3.5 h-3.5" strokeWidth={2} />
             <span>{currentUser ? "Recipe Journal" : "Sign In"}</span>

@@ -131,9 +131,9 @@ export function ShoppingListPanel({
   };
 
   return (
-    <div className="mt-5 bg-[#F7F6F3] border border-[#161514]/15 rounded-xl p-5">
+    <div className="mt-5 bg-[#F7F6F3] border border-[#161514]/15 rounded-xl p-4 sm:p-5">
       <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#161514]/10">
-        <div>
+        <div className="min-w-0">
           <p className="text-xs font-medium text-[#9A3412]">
             Copy-Paste Grocery &amp; Gear List
           </p>
@@ -146,7 +146,7 @@ export function ShoppingListPanel({
           <button
             type="button"
             onClick={handleCopy}
-            className="min-h-[36px] px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-[#161514] hover:bg-[#2C2A28] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9A3412]"
+            className="min-h-[40px] px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-[#161514] hover:bg-[#2C2A28] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9A3412]"
           >
             {copied ? (
               <>
@@ -165,7 +165,7 @@ export function ShoppingListPanel({
             type="button"
             onClick={onClose}
             aria-label="Close shopping list"
-            className="w-8 h-8 rounded-lg bg-white border border-[#161514]/10 text-[#57534E] hover:text-[#161514] flex items-center justify-center transition-colors cursor-pointer"
+            className="w-10 h-10 rounded-lg bg-white border border-[#161514]/10 text-[#57534E] hover:text-[#161514] flex items-center justify-center transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>

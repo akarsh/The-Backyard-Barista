@@ -77,14 +77,17 @@ export function RecipeJournalSection({
   };
 
   return (
-    <section id="journal" className="py-14 border-b border-[#161514]/10">
-      <div className="max-w-[1200px] mx-auto px-6">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+    <section
+      id="journal"
+      className="py-10 sm:py-14 border-b border-[#161514]/10 scroll-mt-16 md:scroll-mt-24"
+    >
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 sm:mb-8">
           <div>
             <p className="text-xs font-medium text-[#9A3412] mb-2">
               02. Repository Recipe Journal
             </p>
-            <h2 className="font-serif text-3xl md:text-4xl font-medium tracking-tight text-[#161514] [text-wrap:balance]">
+            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-medium tracking-tight text-[#161514] [text-wrap:balance]">
               Your saved caffeine creations
             </h2>
           </div>
@@ -96,12 +99,12 @@ export function RecipeJournalSection({
         </div>
 
         {/* User Management + Repository Sync Bar */}
-        <div className="bg-white border border-[#161514]/10 rounded-xl p-6 md:p-7">
+        <div className="bg-white border border-[#161514]/10 rounded-xl p-5 sm:p-6 lg:p-7">
           {!currentUser ? (
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-              <div className="lg:col-span-6">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-center">
+              <div className="lg:col-span-6 min-w-0">
                 <div className="flex items-center gap-2 text-sm font-semibold text-[#161514]">
-                  <ShieldCheck className="w-4 h-4 text-[#9A3412]" />
+                  <ShieldCheck className="w-4 h-4 text-[#9A3412] shrink-0" />
                   <span>Passwordless Journal Access</span>
                 </div>
                 <p className="mt-1.5 text-sm text-[#57534E] leading-relaxed">
@@ -113,7 +116,7 @@ export function RecipeJournalSection({
 
               <form
                 onSubmit={handleLoginSubmit}
-                className="lg:col-span-6 flex flex-col sm:flex-row gap-2.5"
+                className="lg:col-span-6 flex flex-col sm:flex-row gap-2.5 min-w-0"
               >
                 <input
                   type="text"
@@ -122,7 +125,7 @@ export function RecipeJournalSection({
                   placeholder="Username or email (e.g. alex@domain.com)"
                   aria-label="Username or email"
                   autoComplete="username"
-                  className="flex-1 min-h-[44px] px-4 py-2 text-sm bg-[#F7F6F3] text-[#161514] placeholder:text-[#78716C] border border-[#161514]/15 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9A3412]"
+                  className="flex-1 min-w-0 min-h-[44px] px-3.5 sm:px-4 py-2 text-base sm:text-sm bg-[#F7F6F3] text-[#161514] placeholder:text-[#78716C] border border-[#161514]/15 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9A3412]"
                 />
                 <button
                   type="submit"
@@ -144,12 +147,12 @@ export function RecipeJournalSection({
           ) : (
             <div>
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-[#161514]/10">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 min-w-0">
                   <div className="w-10 h-10 rounded-lg bg-[#F7F6F3] border border-[#161514]/10 flex items-center justify-center text-[#9A3412] shrink-0">
                     <UserCheck className="w-5 h-5" />
                   </div>
-                  <div>
-                    <p className="text-sm font-semibold text-[#161514]">
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-[#161514] truncate">
                       Signed in as {currentUser.displayHandle}
                     </p>
                     <p className="text-xs text-[#57534E]">
@@ -161,13 +164,13 @@ export function RecipeJournalSection({
                   </div>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-2">
+                <div className="grid grid-cols-2 sm:flex sm:flex-wrap sm:items-center gap-2">
                   <button
                     type="button"
                     onClick={onDownloadRepoJson}
-                    className="min-h-[40px] px-3.5 py-2 rounded-lg text-xs font-semibold text-[#161514] bg-[#F7F6F3] hover:bg-[#EFECE6] border border-[#161514]/10 transition-colors inline-flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
+                    className="min-h-[44px] sm:min-h-[40px] px-3.5 py-2 rounded-lg text-xs font-semibold text-[#161514] bg-[#F7F6F3] hover:bg-[#EFECE6] border border-[#161514]/10 transition-colors inline-flex items-center justify-center gap-1.5 whitespace-nowrap cursor-pointer"
                   >
-                    <Download className="w-3.5 h-3.5" />
+                    <Download className="w-3.5 h-3.5 shrink-0" />
                     <span>Export Repo JSON</span>
                   </button>
 
@@ -175,18 +178,18 @@ export function RecipeJournalSection({
                     type="button"
                     onClick={() => setShowGitHubSync((prev) => !prev)}
                     aria-expanded={showGitHubSync}
-                    className="min-h-[40px] px-3.5 py-2 rounded-lg text-xs font-semibold text-[#161514] bg-[#F7F6F3] hover:bg-[#EFECE6] border border-[#161514]/10 transition-colors inline-flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
+                    className="min-h-[44px] sm:min-h-[40px] px-3.5 py-2 rounded-lg text-xs font-semibold text-[#161514] bg-[#F7F6F3] hover:bg-[#EFECE6] border border-[#161514]/10 transition-colors inline-flex items-center justify-center gap-1.5 whitespace-nowrap cursor-pointer"
                   >
-                    <GitBranch className="w-3.5 h-3.5 text-[#9A3412]" />
+                    <GitBranch className="w-3.5 h-3.5 text-[#9A3412] shrink-0" />
                     <span>GitHub Repo Sync</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={onSignOut}
-                    className="min-h-[40px] px-3.5 py-2 rounded-lg text-xs font-semibold text-[#57534E] hover:text-[#161514] hover:bg-[#F7F6F3] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
+                    className="col-span-2 sm:col-span-1 min-h-[44px] sm:min-h-[40px] px-3.5 py-2 rounded-lg text-xs font-semibold text-[#57534E] hover:text-[#161514] hover:bg-[#F7F6F3] transition-colors inline-flex items-center justify-center gap-1.5 whitespace-nowrap cursor-pointer"
                   >
-                    <LogOut className="w-3.5 h-3.5" />
+                    <LogOut className="w-3.5 h-3.5 shrink-0" />
                     <span>Sign Out</span>
                   </button>
                 </div>
@@ -224,7 +227,7 @@ export function RecipeJournalSection({
                         value={githubRepoSlug}
                         onChange={(e) => onChangeGithubRepoSlug(e.target.value)}
                         placeholder="username/coffee-studio"
-                        className="w-full min-h-[40px] px-3 py-2 text-xs bg-white text-[#161514] border border-[#161514]/15 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9A3412]"
+                        className="w-full min-h-[44px] sm:min-h-[40px] px-3 py-2 text-base sm:text-xs bg-white text-[#161514] border border-[#161514]/15 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9A3412]"
                       />
                     </div>
                     <div className="md:col-span-2">
@@ -240,7 +243,7 @@ export function RecipeJournalSection({
                         value={githubBranch}
                         onChange={(e) => onChangeGithubBranch(e.target.value)}
                         placeholder="main"
-                        className="w-full min-h-[40px] px-3 py-2 text-xs bg-white text-[#161514] border border-[#161514]/15 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9A3412]"
+                        className="w-full min-h-[44px] sm:min-h-[40px] px-3 py-2 text-base sm:text-xs bg-white text-[#161514] border border-[#161514]/15 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9A3412]"
                       />
                     </div>
                     <div className="md:col-span-4">
@@ -257,7 +260,7 @@ export function RecipeJournalSection({
                         onChange={(e) => onChangeGithubToken(e.target.value)}
                         placeholder="github_pat_..."
                         autoComplete="off"
-                        className="w-full min-h-[40px] px-3 py-2 text-xs bg-white text-[#161514] border border-[#161514]/15 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9A3412]"
+                        className="w-full min-h-[44px] sm:min-h-[40px] px-3 py-2 text-base sm:text-xs bg-white text-[#161514] border border-[#161514]/15 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9A3412]"
                       />
                     </div>
                     <div className="md:col-span-2 flex items-end">
@@ -265,7 +268,7 @@ export function RecipeJournalSection({
                         type="button"
                         disabled={isSyncingGitHub}
                         onClick={onSyncToGitHub}
-                        className="w-full min-h-[40px] px-3.5 py-2 text-xs font-semibold text-white bg-[#9A3412] rounded-lg hover:bg-[#7C2D12] disabled:opacity-60 transition-colors inline-flex items-center justify-center gap-1.5 whitespace-nowrap cursor-pointer"
+                        className="w-full min-h-[44px] sm:min-h-[40px] px-3.5 py-2 text-xs font-semibold text-white bg-[#9A3412] rounded-lg hover:bg-[#7C2D12] disabled:opacity-60 transition-colors inline-flex items-center justify-center gap-1.5 whitespace-nowrap cursor-pointer"
                       >
                         {isSyncingGitHub ? (
                           <>
@@ -289,19 +292,20 @@ export function RecipeJournalSection({
                       }`}
                     >
                       <span>{githubSyncStatus.message}</span>
-                      {githubSyncStatus.url && (
-                        <>
-                          {" "}
-                          <a
-                            href={githubSyncStatus.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="underline font-semibold"
-                          >
-                            View commit
-                          </a>
-                        </>
-                      )}
+                      {githubSyncStatus.url &&
+                        githubSyncStatus.url.startsWith("https://") && (
+                          <>
+                            {" "}
+                            <a
+                              href={githubSyncStatus.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="underline font-semibold"
+                            >
+                              View commit
+                            </a>
+                          </>
+                        )}
                     </div>
                   )}
                 </div>
@@ -363,7 +367,7 @@ export function RecipeJournalSection({
                           <button
                             type="button"
                             onClick={() => handleCopyEntry(entry)}
-                            className="px-3 py-1.5 rounded-lg text-xs font-medium text-[#161514] bg-white border border-[#161514]/10 hover:bg-[#EFECE6] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
+                            className="min-h-[40px] px-3 py-1.5 rounded-lg text-xs font-medium text-[#161514] bg-white border border-[#161514]/10 hover:bg-[#EFECE6] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
                           >
                             {copiedId === entry.id ? (
                               <>
@@ -381,7 +385,7 @@ export function RecipeJournalSection({
                           <button
                             type="button"
                             onClick={() => onLoadEntry(entry)}
-                            className="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-[#161514] hover:bg-[#2C2A28] transition-colors whitespace-nowrap cursor-pointer"
+                            className="min-h-[40px] px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-[#161514] hover:bg-[#2C2A28] transition-colors whitespace-nowrap cursor-pointer"
                           >
                             Load into Studio
                           </button>

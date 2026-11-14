@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { CraftingStudio } from "./components/CraftingStudio";
 import { Header } from "./components/Header";
 import { HeroSection } from "./components/HeroSection";
+import { MobileBottomNav } from "./components/MobileBottomNav";
 import { OriginShowcase } from "./components/OriginShowcase";
 import { RecipeJournalSection } from "./components/RecipeJournalSection";
 import { SavedBrewsDrawer } from "./components/SavedBrewsDrawer";
@@ -577,10 +578,10 @@ export default function App() {
         />
       </main>
 
-      <footer className="border-t border-[#161514]/10 py-8">
-        <div className="max-w-[1200px] mx-auto px-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-[#57534E]">
+      <footer className="border-t border-[#161514]/10 pt-8 pb-24 md:pb-8">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-[#57534E]">
           <span>Sable &amp; Origin · Specialty Coffee Crafting Studio</span>
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
             <a href="#studio" className="hover:text-[#161514] transition-colors">
               Studio
             </a>
@@ -606,6 +607,8 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      <MobileBottomNav />
 
       <SavedBrewsDrawer
         isOpen={isDrawerOpen}

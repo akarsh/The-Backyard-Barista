@@ -30,13 +30,13 @@ export function SavedBrewsDrawer({
       aria-label="Recipe Journal Drawer"
     >
       <div className="flex-1" onClick={onClose} aria-hidden="true" />
-      <aside className="w-full max-w-md bg-[#F7F6F3] h-full shadow-2xl border-l border-[#161514]/10 flex flex-col">
-        <div className="px-6 py-5 bg-white border-b border-[#161514]/10 flex items-center justify-between gap-4">
-          <div>
+      <aside className="w-full sm:max-w-md bg-[#F7F6F3] h-full shadow-2xl border-l border-[#161514]/10 flex flex-col pb-[env(safe-area-inset-bottom)]">
+        <div className="px-4 sm:px-6 py-4 sm:py-5 bg-white border-b border-[#161514]/10 flex items-center justify-between gap-4">
+          <div className="min-w-0">
             <h2 className="font-serif text-xl font-medium text-[#161514]">
               Recipe Journal
             </h2>
-            <p className="text-xs text-[#57534E]">
+            <p className="text-xs text-[#57534E] truncate">
               {currentUser
                 ? `${currentUser.displayHandle} · ${entries.length} ${
                     entries.length === 1 ? "recipe" : "recipes"
@@ -50,13 +50,13 @@ export function SavedBrewsDrawer({
             type="button"
             onClick={onClose}
             aria-label="Close recipe journal drawer"
-            className="w-10 h-10 rounded-lg bg-[#F7F6F3] hover:bg-[#EFECE6] text-[#161514] flex items-center justify-center transition-colors cursor-pointer"
+            className="w-11 h-11 rounded-lg bg-[#F7F6F3] hover:bg-[#EFECE6] text-[#161514] flex items-center justify-center shrink-0 transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-6 space-y-4">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
           {!currentUser && (
             <div className="bg-white border border-[#161514]/10 rounded-xl p-5">
               <p className="text-sm font-semibold text-[#161514]">

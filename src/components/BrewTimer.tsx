@@ -243,12 +243,12 @@ export function BrewTimer({
 
   return (
     <div
-      className="mt-5 bg-[#F7F6F3] border border-[#161514]/15 rounded-xl p-5"
+      className="mt-5 bg-[#F7F6F3] border border-[#161514]/15 rounded-xl p-4 sm:p-5"
       aria-live="polite"
     >
-      <div className="flex items-center justify-between gap-4 pb-4 border-b border-[#161514]/10">
-        <div>
-          <p className="text-xs font-medium text-[#9A3412]">
+      <div className="flex items-center justify-between gap-3 pb-4 border-b border-[#161514]/10">
+        <div className="min-w-0">
+          <p className="text-xs font-medium text-[#9A3412] truncate">
             Active Brew Timer · {recipe.brewRecipe.method}
           </p>
           <p className="text-xs text-[#57534E] mt-0.5 font-mono tabular-nums">
@@ -261,13 +261,13 @@ export function BrewTimer({
           type="button"
           onClick={onClose}
           aria-label="Close brew timer"
-          className="w-8 h-8 rounded-lg bg-white border border-[#161514]/10 text-[#57534E] hover:text-[#161514] flex items-center justify-center transition-colors cursor-pointer"
+          className="w-10 h-10 rounded-lg bg-white border border-[#161514]/10 text-[#57534E] hover:text-[#161514] flex items-center justify-center shrink-0 transition-colors cursor-pointer"
         >
           <X className="w-4 h-4" />
         </button>
       </div>
 
-      <div className="py-5 flex flex-col sm:flex-row items-center sm:items-start gap-6">
+      <div className="py-5 flex flex-col sm:flex-row items-center sm:items-start gap-5 sm:gap-6">
         {/* Circular Countdown Ring */}
         <div className="relative w-28 h-28 shrink-0 flex items-center justify-center">
           <svg
@@ -313,7 +313,7 @@ export function BrewTimer({
         </div>
 
         {/* Active Step Instruction & Controls */}
-        <div className="flex-1 w-full text-center sm:text-left">
+        <div className="flex-1 min-w-0 w-full text-center sm:text-left">
           {isComplete ? (
             <div>
               <h4 className="font-serif text-xl font-medium text-[#161514]">
@@ -348,7 +348,7 @@ export function BrewTimer({
               <button
                 type="button"
                 onClick={() => setIsRunning((r) => !r)}
-                className="min-h-[40px] px-4 py-2 text-xs font-semibold text-white bg-[#161514] rounded-lg hover:bg-[#2C2A28] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
+                className="min-h-[44px] sm:min-h-[40px] px-4 py-2 text-xs font-semibold text-white bg-[#161514] rounded-lg hover:bg-[#2C2A28] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
               >
                 {isRunning ? (
                   <>
@@ -368,7 +368,7 @@ export function BrewTimer({
               <button
                 type="button"
                 onClick={handleSkipPhase}
-                className="min-h-[40px] px-3.5 py-2 text-xs font-semibold text-[#161514] bg-white border border-[#161514]/15 rounded-lg hover:bg-[#EFECE6] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
+                className="min-h-[44px] sm:min-h-[40px] px-3.5 py-2 text-xs font-semibold text-[#161514] bg-white border border-[#161514]/15 rounded-lg hover:bg-[#EFECE6] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
               >
                 <SkipForward className="w-3.5 h-3.5" />
                 <span>Next Step</span>
@@ -378,7 +378,7 @@ export function BrewTimer({
             <button
               type="button"
               onClick={handleRestart}
-              className="min-h-[40px] px-3.5 py-2 text-xs font-semibold text-[#161514] bg-white border border-[#161514]/15 rounded-lg hover:bg-[#EFECE6] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
+              className="min-h-[44px] sm:min-h-[40px] px-3.5 py-2 text-xs font-semibold text-[#161514] bg-white border border-[#161514]/15 rounded-lg hover:bg-[#EFECE6] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span>{isComplete ? "Brew Again" : "Restart"}</span>
@@ -397,7 +397,7 @@ export function BrewTimer({
               key={`${phase.label}-${idx}`}
               type="button"
               onClick={() => handleJumpToPhase(idx)}
-              className={`w-full text-left px-3.5 py-2.5 rounded-lg transition-colors flex items-center justify-between gap-4 cursor-pointer ${
+              className={`w-full min-h-[44px] text-left px-3.5 py-2.5 rounded-lg transition-colors flex items-center justify-between gap-3 cursor-pointer ${
                 isActive
                   ? "bg-white border border-[#9A3412]/40 text-[#161514]"
                   : "bg-transparent hover:bg-white/60 text-[#57534E]"
