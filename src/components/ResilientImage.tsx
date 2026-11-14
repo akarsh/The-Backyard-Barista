@@ -15,7 +15,7 @@ export function ResilientImage({ src, alt, className = "" }: ResilientImageProps
       <div
         role="img"
         aria-label={alt}
-        className={`flex flex-col items-center justify-center bg-gradient-to-br from-[#EAE6DF] to-[#DCD6CC] text-[#5C5750] p-6 text-center ${className}`}
+        className={`flex flex-col items-center justify-center bg-gradient-to-br from-[#EFE9DC] to-[#E2DAC9] dark:from-[#26221E] dark:to-[#191614] text-[#5C534A] dark:text-[#B8AFA4] p-6 text-center ${className}`}
       >
         <Coffee className="w-8 h-8 mb-2 opacity-60" strokeWidth={1.5} />
         <span className="text-xs font-medium max-w-[22ch] leading-relaxed">

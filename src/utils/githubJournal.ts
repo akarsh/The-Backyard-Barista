@@ -113,7 +113,7 @@ export async function syncJournalToGitHubRepo(params: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      message: "Update Sable & Origin recipe-journal.json",
+      message: "Update Seggemu KaapiWerk recipe-journal.json",
       content: toBase64Utf8(contentString),
       branch,
       ...(existingSha ? { sha: existingSha } : {}),

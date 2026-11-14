@@ -12,6 +12,7 @@ import {
   Timer,
   X,
 } from "lucide-react";
+import { BrandLogo } from "./BrandLogo";
 import { BrewTimer } from "./BrewTimer";
 import { ResilientImage } from "./ResilientImage";
 import { ShoppingListPanel } from "./ShoppingListPanel";
@@ -23,6 +24,7 @@ import {
   ORIGIN_LOTS,
   ROAST_PROFILES,
 } from "../data/pantry";
+import { AppTranslations } from "../i18n/translations";
 import {
   ChatMessage,
   CraftPreferences,
@@ -49,14 +51,8 @@ interface CraftingStudioProps {
   chatError: string | null;
   onSendChat: (messageText: string) => void;
   chatInputRef: RefObject<HTMLInputElement | null>;
+  t: AppTranslations;
 }
-
-const QUICK_PROMPTS = [
-  "Make this iced",
-  "Swap to macadamia milk",
-  "How do I avoid bitterness?",
-  "Adjust for a sweeter finish",
-];
 
 export function CraftingStudio({
   preferences,
@@ -78,6 +74,7 @@ export function CraftingStudio({
   chatError,
   onSendChat,
   chatInputRef,
+  t,
 }: CraftingStudioProps) {
   const [chatDraft, setChatDraft] = useState("");
   const [isTimerOpen, setIsTimerOpen] = useState(false);
@@ -120,52 +117,51 @@ export function CraftingStudio({
   return (
     <section
       id="studio"
-      className="py-10 sm:py-14 border-b border-[#161514]/10 scroll-mt-16 md:scroll-mt-24"
+      className="py-10 sm:py-14 border-b border-[#191614]/10 dark:border-white/10 scroll-mt-16 md:scroll-mt-24"
     >
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 sm:mb-8">
           <div>
-            <p className="text-xs font-medium text-[#9A3412] mb-2">
-              01. Interactive Workbench
+            <p className="text-xs font-medium text-[#A62C1B] dark:text-[#F59E0B] mb-2">
+              {t.studio.eyebrow}
             </p>
-            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-medium tracking-tight text-[#161514] [text-wrap:balance]">
-              Dial in your flavor profile
+            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-medium tracking-tight text-[#191614] dark:text-[#F5F0E6] [text-wrap:balance]">
+              {t.studio.title}
             </h2>
           </div>
-          <p className="text-sm text-[#57534E] max-w-md">
-            Select your flavor notes and brew preferences, or lock in a specific
-            roast and milk alternative. Milo will calibrate the exact recipe.
+          <p className="text-sm text-[#5C534A] dark:text-[#B8AFA4] max-w-md">
+            {t.studio.subtitle}
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
           {/* Left Column: Configurator */}
-          <div className="lg:col-span-5 lg:sticky lg:top-20 bg-white border border-[#161514]/10 rounded-xl p-5 sm:p-6 lg:p-7 min-w-0">
-            <div className="flex items-center justify-between gap-4 pb-5 border-b border-[#161514]/10">
-              <div className="flex items-center gap-2 text-sm font-semibold text-[#161514]">
-                <SlidersHorizontal className="w-4 h-4 text-[#9A3412]" />
-                <span>Taste &amp; Brew Controls</span>
+          <div className="lg:col-span-5 lg:sticky lg:top-20 bg-white dark:bg-[#1C1917] border border-[#191614]/10 dark:border-white/10 rounded-xl p-5 sm:p-6 lg:p-7 min-w-0">
+            <div className="flex items-center justify-between gap-4 pb-5 border-b border-[#191614]/10 dark:border-white/10">
+              <div className="flex items-center gap-2 text-sm font-semibold text-[#191614] dark:text-[#F5F0E6]">
+                <SlidersHorizontal className="w-4 h-4 text-[#A62C1B] dark:text-[#F59E0B]" />
+                <span>{t.studio.controlsTitle}</span>
               </div>
               <button
                 type="button"
                 onClick={onResetPreferences}
-                className="inline-flex items-center gap-1.5 min-h-[36px] px-2 -mr-2 text-xs font-medium text-[#57534E] hover:text-[#161514] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+                className="inline-flex items-center gap-1.5 min-h-[36px] px-2 -mr-2 text-xs font-medium text-[#5C534A] dark:text-[#B8AFA4] hover:text-[#191614] dark:hover:text-[#F5F0E6] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
-                <span>Reset</span>
+                <span>{t.studio.reset}</span>
               </button>
             </div>
 
             {/* Step 1: Flavor Preferences */}
-            <div className="py-5 border-b border-[#161514]/10">
+            <div className="py-5 border-b border-[#191614]/10 dark:border-white/10">
               <div className="flex items-baseline justify-between mb-3">
-                <span className="text-sm font-semibold text-[#161514]">
-                  Flavor Direction
+                <span className="text-sm font-semibold text-[#191614] dark:text-[#F5F0E6]">
+                  {t.studio.flavorDirection}
                 </span>
-                <span className="text-xs text-[#57534E]">
+                <span className="text-xs text-[#5C534A] dark:text-[#B8AFA4]">
                   {preferences.flavors.length === 0
-                    ? "Select 1 or more"
-                    : `${preferences.flavors.length} selected`}
+                    ? t.studio.selectOneOrMore
+                    : `${preferences.flavors.length} ${t.studio.selectedCount}`}
                 </span>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 gap-2">
@@ -177,16 +173,16 @@ export function CraftingStudio({
                       type="button"
                       onClick={() => toggleFlavor(flavor)}
                       aria-pressed={active}
-                      className={`min-h-[44px] sm:min-h-[40px] px-3.5 py-2 rounded-lg text-sm font-medium text-left transition-colors whitespace-nowrap flex items-center justify-between cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9A3412] ${
+                      className={`min-h-[44px] sm:min-h-[40px] px-3.5 py-2 rounded-lg text-sm font-medium text-left transition-colors whitespace-nowrap flex items-center justify-between cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A62C1B] dark:focus-visible:ring-[#F59E0B] ${
                         active
-                          ? "bg-[#161514] text-white"
-                          : "bg-[#F7F6F3] text-[#161514] hover:bg-[#EFECE6]"
+                          ? "bg-[#191614] dark:bg-[#F59E0B] text-white dark:text-[#12100E]"
+                          : "bg-[#F8F5EE] dark:bg-[#26221E] text-[#191614] dark:text-[#F5F0E6] hover:bg-[#EFE9DC] dark:hover:bg-[#312B25]"
                       }`}
                     >
                       <span className="truncate">{flavor}</span>
                       {active && (
                         <Check
-                          className="w-3.5 h-3.5 shrink-0 ml-2 text-[#F59E0B]"
+                          className="w-3.5 h-3.5 shrink-0 ml-2 text-[#F59E0B] dark:text-[#12100E]"
                           strokeWidth={2.5}
                         />
                       )}
@@ -197,10 +193,10 @@ export function CraftingStudio({
             </div>
 
             {/* Step 2: Brew Method, Serving Temp & Body */}
-            <div className="py-5 border-b border-[#161514]/10 space-y-5">
+            <div className="py-5 border-b border-[#191614]/10 dark:border-white/10 space-y-5">
               <div>
-                <span className="block text-sm font-semibold text-[#161514] mb-3">
-                  Brew Method
+                <span className="block text-sm font-semibold text-[#191614] dark:text-[#F5F0E6] mb-3">
+                  {t.studio.brewMethod}
                 </span>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-2">
                   {BREW_METHODS.map((method) => {
@@ -216,10 +212,10 @@ export function CraftingStudio({
                           })
                         }
                         aria-pressed={active}
-                        className={`min-h-[44px] sm:min-h-[40px] px-3 py-2 rounded-lg text-xs font-semibold transition-colors whitespace-nowrap truncate cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9A3412] ${
+                        className={`min-h-[44px] sm:min-h-[40px] px-3 py-2 rounded-lg text-xs font-semibold transition-colors whitespace-nowrap truncate cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A62C1B] dark:focus-visible:ring-[#F59E0B] ${
                           active
-                            ? "bg-[#9A3412] text-white"
-                            : "bg-[#F7F6F3] text-[#161514] hover:bg-[#EFECE6]"
+                            ? "bg-[#A62C1B] dark:bg-[#DC4A33] text-white"
+                            : "bg-[#F8F5EE] dark:bg-[#26221E] text-[#191614] dark:text-[#F5F0E6] hover:bg-[#EFE9DC] dark:hover:bg-[#312B25]"
                         }`}
                       >
                         {method}
@@ -231,10 +227,10 @@ export function CraftingStudio({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <span className="block text-xs font-semibold text-[#161514] mb-2">
-                    Serving Temperature
+                  <span className="block text-xs font-semibold text-[#191614] dark:text-[#F5F0E6] mb-2">
+                    {t.studio.servingTemp}
                   </span>
-                  <div className="grid grid-cols-2 gap-1 p-1 bg-[#F7F6F3] rounded-lg">
+                  <div className="grid grid-cols-2 gap-1 p-1 bg-[#F8F5EE] dark:bg-[#26221E] rounded-lg">
                     {(["Hot", "Iced"] as const).map((temp) => {
                       const active = preferences.servingTemp === temp;
                       return (
@@ -249,11 +245,11 @@ export function CraftingStudio({
                           }
                           className={`min-h-[38px] sm:min-h-[36px] px-3 py-1.5 text-xs font-semibold rounded-md transition-colors whitespace-nowrap cursor-pointer ${
                             active
-                              ? "bg-white text-[#161514] shadow-xs"
-                              : "text-[#57534E] hover:text-[#161514]"
+                              ? "bg-white dark:bg-[#12100E] text-[#191614] dark:text-[#F5F0E6] shadow-xs"
+                              : "text-[#5C534A] dark:text-[#B8AFA4] hover:text-[#191614] dark:hover:text-[#F5F0E6]"
                           }`}
                         >
-                          {temp}
+                          {temp === "Hot" ? t.studio.hot : t.studio.iced}
                         </button>
                       );
                     })}
@@ -263,9 +259,9 @@ export function CraftingStudio({
                 <div>
                   <label
                     htmlFor="body-select"
-                    className="block text-xs font-semibold text-[#161514] mb-2"
+                    className="block text-xs font-semibold text-[#191614] dark:text-[#F5F0E6] mb-2"
                   >
-                    Body &amp; Intensity
+                    {t.studio.bodyIntensity}
                   </label>
                   <select
                     id="body-select"
@@ -277,11 +273,11 @@ export function CraftingStudio({
                           .value as CraftPreferences["bodyPreference"],
                       })
                     }
-                    className="w-full min-h-[44px] px-3 py-2 text-base sm:text-xs font-medium bg-[#F7F6F3] text-[#161514] border border-[#161514]/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9A3412]"
+                    className="w-full min-h-[44px] px-3 py-2 text-base sm:text-xs font-medium bg-[#F8F5EE] dark:bg-[#26221E] text-[#191614] dark:text-[#F5F0E6] border border-[#191614]/10 dark:border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A62C1B] dark:focus-visible:ring-[#F59E0B]"
                   >
-                    <option value="Light & Tea-Like">Light &amp; Tea-Like</option>
-                    <option value="Balanced">Balanced</option>
-                    <option value="Syrupy & Bold">Syrupy &amp; Bold</option>
+                    <option value="Light & Tea-Like">{t.studio.bodyLight}</option>
+                    <option value="Balanced">{t.studio.bodyBalanced}</option>
+                    <option value="Syrupy & Bold">{t.studio.bodyBold}</option>
                   </select>
                 </div>
               </div>
@@ -292,9 +288,9 @@ export function CraftingStudio({
               <div>
                 <label
                   htmlFor="origin-select"
-                  className="block text-xs font-semibold text-[#161514] mb-1.5"
+                  className="block text-xs font-semibold text-[#191614] dark:text-[#F5F0E6] mb-1.5"
                 >
-                  Single-Origin Bean Lot
+                  {t.studio.originLot}
                 </label>
                 <select
                   id="origin-select"
@@ -305,10 +301,10 @@ export function CraftingStudio({
                       selectedOrigin: e.target.value,
                     })
                   }
-                  className="w-full min-h-[44px] px-3 py-2 text-base sm:text-sm bg-[#F7F6F3] text-[#161514] border border-[#161514]/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9A3412]"
+                  className="w-full min-h-[44px] px-3 py-2 text-base sm:text-sm bg-[#F8F5EE] dark:bg-[#26221E] text-[#191614] dark:text-[#F5F0E6] border border-[#191614]/10 dark:border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A62C1B] dark:focus-visible:ring-[#F59E0B]"
                 >
                   <option value="Barista Choice">
-                    Barista Choice (Match to Flavors)
+                    {t.studio.baristaChoiceMatch}
                   </option>
                   {ORIGIN_LOTS.map((lot) => (
                     <option key={lot.id} value={`${lot.origin} — ${lot.name}`}>
@@ -322,9 +318,9 @@ export function CraftingStudio({
                 <div>
                   <label
                     htmlFor="roast-select"
-                    className="block text-xs font-semibold text-[#161514] mb-1.5"
+                    className="block text-xs font-semibold text-[#191614] dark:text-[#F5F0E6] mb-1.5"
                   >
-                    Roast Profile
+                    {t.studio.roastProfile}
                   </label>
                   <select
                     id="roast-select"
@@ -335,7 +331,7 @@ export function CraftingStudio({
                         selectedRoast: e.target.value,
                       })
                     }
-                    className="w-full min-h-[44px] px-3 py-2 text-base sm:text-sm bg-[#F7F6F3] text-[#161514] border border-[#161514]/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9A3412]"
+                    className="w-full min-h-[44px] px-3 py-2 text-base sm:text-sm bg-[#F8F5EE] dark:bg-[#26221E] text-[#191614] dark:text-[#F5F0E6] border border-[#191614]/10 dark:border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A62C1B] dark:focus-visible:ring-[#F59E0B]"
                   >
                     {ROAST_PROFILES.map((roast) => (
                       <option key={roast.id} value={roast.id}>
@@ -348,9 +344,9 @@ export function CraftingStudio({
                 <div>
                   <label
                     htmlFor="milk-select"
-                    className="block text-xs font-semibold text-[#161514] mb-1.5"
+                    className="block text-xs font-semibold text-[#191614] dark:text-[#F5F0E6] mb-1.5"
                   >
-                    Milk Alternative
+                    {t.studio.milkAlternative}
                   </label>
                   <select
                     id="milk-select"
@@ -361,7 +357,7 @@ export function CraftingStudio({
                         selectedMilk: e.target.value,
                       })
                     }
-                    className="w-full min-h-[44px] px-3 py-2 text-base sm:text-sm bg-[#F7F6F3] text-[#161514] border border-[#161514]/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9A3412]"
+                    className="w-full min-h-[44px] px-3 py-2 text-base sm:text-sm bg-[#F8F5EE] dark:bg-[#26221E] text-[#191614] dark:text-[#F5F0E6] border border-[#191614]/10 dark:border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A62C1B] dark:focus-visible:ring-[#F59E0B]"
                   >
                     {MILK_ALTERNATIVES.map((milk) => (
                       <option key={milk.id} value={milk.id}>
@@ -375,9 +371,9 @@ export function CraftingStudio({
               <div>
                 <label
                   htmlFor="custom-note"
-                  className="block text-xs font-semibold text-[#161514] mb-1.5"
+                  className="block text-xs font-semibold text-[#191614] dark:text-[#F5F0E6] mb-1.5"
                 >
-                  Additional Notes (Optional)
+                  {t.studio.additionalNotes}
                 </label>
                 <input
                   id="custom-note"
@@ -389,8 +385,8 @@ export function CraftingStudio({
                       customNote: e.target.value,
                     })
                   }
-                  placeholder="e.g., Low acidity, silky texture, afternoon drink"
-                  className="w-full min-h-[44px] px-3.5 py-2 text-base sm:text-sm bg-[#F7F6F3] text-[#161514] placeholder:text-[#78716C] border border-[#161514]/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9A3412]"
+                  placeholder={t.studio.notesPlaceholder}
+                  className="w-full min-h-[44px] px-3.5 py-2 text-base sm:text-sm bg-[#F8F5EE] dark:bg-[#26221E] text-[#191614] dark:text-[#F5F0E6] placeholder:text-[#78716C] dark:placeholder:text-[#8E857B] border border-[#191614]/10 dark:border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A62C1B] dark:focus:ring-[#F59E0B]"
                 />
               </div>
             </div>
@@ -398,9 +394,9 @@ export function CraftingStudio({
             {craftError && (
               <div
                 role="alert"
-                className="mb-4 p-3.5 rounded-lg bg-[#FEF2F2] border border-[#DC2626]/20 text-xs text-[#991B1B]"
+                className="mb-4 p-3.5 rounded-lg bg-[#FEF2F2] dark:bg-[#450A0A]/50 border border-[#DC2626]/20 dark:border-[#F87171]/30 text-xs text-[#991B1B] dark:text-[#FCA5A5]"
               >
-                <p className="font-semibold">Unable to craft recommendation</p>
+                <p className="font-semibold">{t.studio.craftErrorTitle}</p>
                 <p className="mt-1">{craftError}</p>
               </div>
             )}
@@ -409,55 +405,91 @@ export function CraftingStudio({
               type="button"
               onClick={onCraft}
               disabled={isCrafting}
-              className="w-full min-h-[48px] px-5 py-3 text-sm font-semibold text-white bg-[#161514] rounded-lg hover:bg-[#2C2A28] disabled:opacity-60 transition-colors flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9A3412] focus-visible:ring-offset-2"
+              className="w-full min-h-[48px] px-5 py-3 text-sm font-semibold text-white bg-[#191614] dark:bg-[#DC4A33] rounded-lg hover:bg-[#2F2A26] dark:hover:bg-[#C23B26] disabled:opacity-60 transition-colors flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A62C1B] dark:focus-visible:ring-[#F59E0B] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#1C1917]"
             >
               {isCrafting ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Crafting your brew sheet...</span>
+                  <span>{t.studio.crafting}</span>
                 </>
               ) : (
-                <span>Craft Recommendation</span>
+                <span>{t.studio.craftBtn}</span>
               )}
             </button>
           </div>
 
           {/* Right Column: Live Brew Sheet + Milo Barista Consultation */}
-          <div className="lg:col-span-7 bg-white border border-[#161514]/10 rounded-xl p-5 sm:p-6 lg:p-8 min-w-0">
-            {/* Brew Sheet Header — Stacked Title + Full-Width Action Toolbar (prevents squishing or card overflow) */}
-            <div className="flex flex-col gap-5 pb-6 border-b border-[#161514]/10">
-              <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-2 text-xs text-[#57534E] mb-2">
-                  <span>{recipe.brewRecipe.method}</span>
-                  <span aria-hidden="true">·</span>
-                  <span>{recipe.brewRecipe.servingTemp}</span>
-                  <span aria-hidden="true">·</span>
-                  <span>{recipe.roastProfile.level}</span>
+          <div className="lg:col-span-7 bg-white dark:bg-[#1C1917] border border-[#191614]/10 dark:border-white/10 border-t-[3px] border-t-[#A62C1B] dark:border-t-[#DC4A33] rounded-xl p-5 sm:p-6 lg:p-8 min-w-0">
+            {/* Brew Sheet Header — Brand Seal + Top-Right Primary Save CTA + Symmetrical 4-Tool Bar */}
+            <div className="flex flex-col gap-5 pb-6 border-b border-[#191614]/10 dark:border-white/10">
+              <div className="flex items-center justify-between gap-3 pb-3 border-b border-[#191614]/8 dark:border-white/8">
+                <div className="inline-flex items-center gap-2 min-w-0">
+                  <BrandLogo className="w-5 h-5 shrink-0" />
+                  <span className="font-mono text-[10px] tracking-[0.12em] uppercase text-[#5C534A] dark:text-[#B8AFA4] truncate">
+                    {t.brandName} · Brew Sheet
+                  </span>
                 </div>
-                <h3 className="font-serif text-2xl sm:text-3xl font-medium tracking-tight text-[#161514] [text-wrap:balance]">
-                  {recipe.title}
-                </h3>
-                <p className="mt-2 text-xs sm:text-sm font-medium text-[#9A3412]">
-                  {recipe.tastingNotes.join(" · ")}
-                </p>
+                <span className="font-mono text-[10px] tabular-nums text-[#8C4508] dark:text-[#F59E0B] whitespace-nowrap shrink-0">
+                  {recipe.brewRecipe.doseGrams}g / {recipe.brewRecipe.waterOrYieldMl}ml
+                </span>
               </div>
 
-              <div className="grid grid-cols-2 sm:flex sm:flex-wrap sm:items-center gap-2">
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-[#5C534A] dark:text-[#B8AFA4] mb-2">
+                    <span>{recipe.brewRecipe.method}</span>
+                    <span aria-hidden="true">·</span>
+                    <span>{recipe.brewRecipe.servingTemp}</span>
+                    <span aria-hidden="true">·</span>
+                    <span>{recipe.roastProfile.level}</span>
+                  </div>
+                  <h3 className="font-serif text-2xl sm:text-3xl font-medium tracking-tight text-[#191614] dark:text-[#F5F0E6] [text-wrap:balance]">
+                    {recipe.title}
+                  </h3>
+                  <p className="mt-2 text-xs sm:text-sm font-medium text-[#A62C1B] dark:text-[#F59E0B]">
+                    {recipe.tastingNotes.join(" · ")}
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={onSaveRecipe}
+                  className={`w-full sm:w-auto shrink-0 self-start min-h-[42px] px-4 py-2 rounded-lg text-xs font-semibold inline-flex items-center justify-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A62C1B] dark:focus-visible:ring-[#F59E0B] ${
+                    isSaved
+                      ? "bg-[#EFE9DC] dark:bg-[#26221E] text-[#191614] dark:text-[#F5F0E6] border border-[#191614]/15 dark:border-white/12"
+                      : "bg-[#A62C1B] dark:bg-[#DC4A33] text-white hover:bg-[#882214] dark:hover:bg-[#C23B26]"
+                  }`}
+                >
+                  {isSaved ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-[#A62C1B] dark:text-[#F59E0B] shrink-0" />
+                      <span>{t.studio.savedToJournal}</span>
+                    </>
+                  ) : (
+                    <>
+                      <Bookmark className="w-3.5 h-3.5 shrink-0" />
+                      <span>{t.studio.saveToJournal}</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 <button
                   type="button"
                   onClick={onVisualizeBrew}
                   disabled={isVisualizing}
-                  className="min-h-[44px] sm:min-h-[40px] px-3 py-2 rounded-lg text-xs font-semibold inline-flex items-center justify-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer bg-[#F7F6F3] text-[#161514] border border-[#161514]/15 hover:bg-[#EFECE6] disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9A3412]"
+                  className="min-h-[44px] sm:min-h-[40px] px-3 py-2 rounded-lg text-xs font-semibold inline-flex items-center justify-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer bg-[#F8F5EE] dark:bg-[#26221E] text-[#191614] dark:text-[#F5F0E6] border border-[#191614]/15 dark:border-white/12 hover:bg-[#EFE9DC] dark:hover:bg-[#312B25] disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A62C1B] dark:focus-visible:ring-[#F59E0B]"
                 >
                   {isVisualizing ? (
                     <>
-                      <Loader2 className="w-3.5 h-3.5 animate-spin text-[#9A3412] shrink-0" />
-                      <span>Rendering...</span>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-[#A62C1B] dark:text-[#F59E0B] shrink-0" />
+                      <span className="truncate">{t.studio.rendering}</span>
                     </>
                   ) : (
                     <>
-                      <Camera className="w-3.5 h-3.5 text-[#9A3412] shrink-0" />
-                      <span>Visualize Brew</span>
+                      <Camera className="w-3.5 h-3.5 text-[#A62C1B] dark:text-[#F59E0B] shrink-0" />
+                      <span className="truncate">{t.studio.visualizeBrew}</span>
                     </>
                   )}
                 </button>
@@ -465,17 +497,17 @@ export function CraftingStudio({
                 <button
                   type="button"
                   onClick={handleCopyRecipe}
-                  className="min-h-[44px] sm:min-h-[40px] px-3 py-2 rounded-lg text-xs font-semibold inline-flex items-center justify-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer bg-[#F7F6F3] text-[#161514] border border-[#161514]/15 hover:bg-[#EFECE6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9A3412]"
+                  className="min-h-[44px] sm:min-h-[40px] px-3 py-2 rounded-lg text-xs font-semibold inline-flex items-center justify-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer bg-[#F8F5EE] dark:bg-[#26221E] text-[#191614] dark:text-[#F5F0E6] border border-[#191614]/15 dark:border-white/12 hover:bg-[#EFE9DC] dark:hover:bg-[#312B25] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A62C1B] dark:focus-visible:ring-[#F59E0B]"
                 >
                   {copiedRecipe ? (
                     <>
-                      <Check className="w-3.5 h-3.5 text-[#9A3412] shrink-0" />
-                      <span>Copied</span>
+                      <Check className="w-3.5 h-3.5 text-[#A62C1B] dark:text-[#F59E0B] shrink-0" />
+                      <span className="truncate">{t.studio.copied}</span>
                     </>
                   ) : (
                     <>
                       <Copy className="w-3.5 h-3.5 shrink-0" />
-                      <span>Copy Recipe</span>
+                      <span className="truncate">{t.studio.copyRecipe}</span>
                     </>
                   )}
                 </button>
@@ -484,15 +516,15 @@ export function CraftingStudio({
                   type="button"
                   onClick={() => setIsShoppingListOpen((prev) => !prev)}
                   aria-expanded={isShoppingListOpen}
-                  className={`min-h-[44px] sm:min-h-[40px] px-3 py-2 rounded-lg text-xs font-semibold inline-flex items-center justify-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9A3412] ${
+                  className={`min-h-[44px] sm:min-h-[40px] px-3 py-2 rounded-lg text-xs font-semibold inline-flex items-center justify-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A62C1B] dark:focus-visible:ring-[#F59E0B] ${
                     isShoppingListOpen
-                      ? "bg-[#161514] text-white"
-                      : "bg-[#F7F6F3] text-[#161514] border border-[#161514]/15 hover:bg-[#EFECE6]"
+                      ? "bg-[#191614] dark:bg-[#F59E0B] text-white dark:text-[#12100E]"
+                      : "bg-[#F8F5EE] dark:bg-[#26221E] text-[#191614] dark:text-[#F5F0E6] border border-[#191614]/15 dark:border-white/12 hover:bg-[#EFE9DC] dark:hover:bg-[#312B25]"
                   }`}
                 >
                   <ShoppingBag className="w-3.5 h-3.5 shrink-0" />
-                  <span>
-                    {isShoppingListOpen ? "Hide List" : "Shopping List"}
+                  <span className="truncate">
+                    {isShoppingListOpen ? t.studio.hideList : t.studio.shoppingList}
                   </span>
                 </button>
 
@@ -500,36 +532,16 @@ export function CraftingStudio({
                   type="button"
                   onClick={handleOpenTimer}
                   aria-expanded={isTimerOpen}
-                  className={`min-h-[44px] sm:min-h-[40px] px-3 py-2 rounded-lg text-xs font-semibold inline-flex items-center justify-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9A3412] ${
+                  className={`min-h-[44px] sm:min-h-[40px] px-3 py-2 rounded-lg text-xs font-semibold inline-flex items-center justify-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A62C1B] dark:focus-visible:ring-[#F59E0B] ${
                     isTimerOpen
-                      ? "bg-[#161514] text-white"
-                      : "bg-[#F7F6F3] text-[#161514] border border-[#161514]/15 hover:bg-[#EFECE6]"
+                      ? "bg-[#191614] dark:bg-[#F59E0B] text-white dark:text-[#12100E]"
+                      : "bg-[#F8F5EE] dark:bg-[#26221E] text-[#191614] dark:text-[#F5F0E6] border border-[#191614]/15 dark:border-white/12 hover:bg-[#EFE9DC] dark:hover:bg-[#312B25]"
                   }`}
                 >
                   <Timer className="w-3.5 h-3.5 shrink-0" />
-                  <span>{isTimerOpen ? "Hide Timer" : "Brew Timer"}</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={onSaveRecipe}
-                  className={`col-span-2 sm:col-span-1 sm:ml-auto min-h-[44px] sm:min-h-[40px] px-4 py-2 rounded-lg text-xs font-semibold inline-flex items-center justify-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9A3412] ${
-                    isSaved
-                      ? "bg-[#EFECE6] text-[#161514] border border-[#161514]/15"
-                      : "bg-[#9A3412] text-white hover:bg-[#7C2D12]"
-                  }`}
-                >
-                  {isSaved ? (
-                    <>
-                      <Check className="w-3.5 h-3.5 text-[#9A3412] shrink-0" />
-                      <span>Saved to Journal</span>
-                    </>
-                  ) : (
-                    <>
-                      <Bookmark className="w-3.5 h-3.5 shrink-0" />
-                      <span>Save to Journal</span>
-                    </>
-                  )}
+                  <span className="truncate">
+                    {isTimerOpen ? t.studio.hideTimer : t.studio.brewTimer}
+                  </span>
                 </button>
               </div>
             </div>
@@ -537,15 +549,15 @@ export function CraftingStudio({
             {visualizeError && (
               <div
                 role="alert"
-                className="mt-5 p-3.5 rounded-lg bg-[#FEF2F2] border border-[#DC2626]/20 text-xs text-[#991B1B]"
+                className="mt-5 p-3.5 rounded-lg bg-[#FEF2F2] dark:bg-[#450A0A]/50 border border-[#DC2626]/20 dark:border-[#F87171]/30 text-xs text-[#991B1B] dark:text-[#FCA5A5]"
               >
                 {visualizeError}
               </div>
             )}
 
             {visualData && (
-              <div className="mt-5 bg-[#F7F6F3] border border-[#161514]/10 rounded-xl overflow-hidden">
-                <div className="relative aspect-[4/3] bg-[#161514]">
+              <div className="mt-5 bg-[#F8F5EE] dark:bg-[#26221E] border border-[#191614]/10 dark:border-white/10 rounded-xl overflow-hidden">
+                <div className="relative aspect-[4/3] bg-[#191614]">
                   <ResilientImage
                     src={visualData.imageUrl}
                     alt={`${recipe.title} served in ${visualData.vesselDescription}`}
@@ -560,9 +572,9 @@ export function CraftingStudio({
                     <X className="w-4 h-4" />
                   </button>
                 </div>
-                <div className="px-4 py-3 flex flex-wrap items-center justify-between gap-2 text-xs text-[#57534E]">
+                <div className="px-4 py-3 flex flex-wrap items-center justify-between gap-2 text-xs text-[#5C534A] dark:text-[#B8AFA4]">
                   <span>
-                    <strong className="font-semibold text-[#161514]">
+                    <strong className="font-semibold text-[#191614] dark:text-[#F5F0E6]">
                       {recipe.title}
                     </strong>{" "}
                     · {visualData.vesselDescription} · {recipe.milkPairing.name}
@@ -571,116 +583,128 @@ export function CraftingStudio({
                     type="button"
                     onClick={onVisualizeBrew}
                     disabled={isVisualizing}
-                    className="font-semibold text-[#9A3412] hover:text-[#7C2D12] transition-colors cursor-pointer"
+                    className="font-semibold text-[#A62C1B] dark:text-[#F59E0B] hover:text-[#882214] dark:hover:text-[#FBBF24] transition-colors cursor-pointer"
                   >
-                    Regenerate
+                    {t.studio.regenerate}
                   </button>
                 </div>
               </div>
             )}
 
             {/* Barista Note */}
-            <div className="py-5 border-b border-[#161514]/10">
-              <p className="text-xs font-semibold text-[#57534E] mb-1.5">
-                Milo&apos;s Barista Note
+            <div className="py-5 border-b border-[#191614]/10 dark:border-white/10">
+              <p className="text-xs font-semibold text-[#5C534A] dark:text-[#B8AFA4] mb-1.5">
+                {t.studio.baristaNoteTitle}
               </p>
-              <p className="text-[15px] leading-[1.65] text-[#161514]">
+              <p className="text-[15px] leading-[1.65] text-[#191614] dark:text-[#F5F0E6]">
                 {recipe.baristaNote}
               </p>
             </div>
 
             {/* Bean, Roast & Milk Architecture */}
-            <div className="py-6 border-b border-[#161514]/10 grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6">
+            <div className="py-6 border-b border-[#191614]/10 dark:border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6">
               <div className="min-w-0">
-                <p className="text-xs text-[#57534E] mb-1">Selected Bean</p>
-                <p className="text-sm font-semibold text-[#161514]">
+                <p className="text-xs text-[#5C534A] dark:text-[#B8AFA4] mb-1">
+                  {t.studio.selectedBean}
+                </p>
+                <p className="text-sm font-semibold text-[#191614] dark:text-[#F5F0E6]">
                   {recipe.bean.name}
                 </p>
-                <p className="mt-1 text-xs text-[#57534E]">
+                <p className="mt-1 text-xs text-[#5C534A] dark:text-[#B8AFA4]">
                   {recipe.bean.origin} · {recipe.bean.region}
                 </p>
-                <p className="mt-0.5 text-xs text-[#57534E]">
+                <p className="mt-0.5 text-xs text-[#5C534A] dark:text-[#B8AFA4]">
                   {recipe.bean.process} · {recipe.bean.elevation}
                 </p>
-                <p className="mt-2 text-xs leading-relaxed text-[#57534E]">
+                <p className="mt-2 text-xs leading-relaxed text-[#5C534A] dark:text-[#B8AFA4]">
                   {recipe.bean.whyItFits}
                 </p>
               </div>
 
               <div className="min-w-0">
-                <p className="text-xs text-[#57534E] mb-1">Roast Curve</p>
-                <p className="text-sm font-semibold text-[#161514]">
+                <p className="text-xs text-[#5C534A] dark:text-[#B8AFA4] mb-1">
+                  {t.studio.roastCurve}
+                </p>
+                <p className="text-sm font-semibold text-[#191614] dark:text-[#F5F0E6]">
                   {recipe.roastProfile.level}
                 </p>
-                <p className="mt-1 text-xs text-[#57534E]">
+                <p className="mt-1 text-xs text-[#5C534A] dark:text-[#B8AFA4]">
                   {recipe.roastProfile.developmentNote}
                 </p>
-                <p className="mt-2 text-xs leading-relaxed text-[#57534E]">
+                <p className="mt-2 text-xs leading-relaxed text-[#5C534A] dark:text-[#B8AFA4]">
                   {recipe.roastProfile.flavorImpact}
                 </p>
               </div>
 
               <div className="min-w-0">
-                <p className="text-xs text-[#57534E] mb-1">Milk &amp; Texture</p>
-                <p className="text-sm font-semibold text-[#161514]">
+                <p className="text-xs text-[#5C534A] dark:text-[#B8AFA4] mb-1">
+                  {t.studio.milkTexture}
+                </p>
+                <p className="text-sm font-semibold text-[#191614] dark:text-[#F5F0E6]">
                   {recipe.milkPairing.name}
                 </p>
-                <p className="mt-1 text-xs text-[#57534E]">
+                <p className="mt-1 text-xs text-[#5C534A] dark:text-[#B8AFA4]">
                   {recipe.milkPairing.textureStyle}
                   {recipe.milkPairing.steamTempC > 0 &&
                     ` · ${recipe.milkPairing.steamTempC}°C`}
                 </p>
-                <p className="mt-2 text-xs leading-relaxed text-[#57534E]">
+                <p className="mt-2 text-xs leading-relaxed text-[#5C534A] dark:text-[#B8AFA4]">
                   {recipe.milkPairing.whyItFits}
                 </p>
               </div>
             </div>
 
             {/* Precision Brew Parameters */}
-            <div className="py-6 border-b border-[#161514]/10">
-              <p className="text-xs font-semibold text-[#57534E] mb-4">
-                Extraction Parameters
+            <div className="py-6 border-b border-[#191614]/10 dark:border-white/10">
+              <p className="text-xs font-semibold text-[#5C534A] dark:text-[#B8AFA4] mb-4">
+                {t.studio.extractionParams}
               </p>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 bg-[#F7F6F3] rounded-lg p-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 bg-[#F8F5EE] dark:bg-[#26221E] rounded-lg p-4">
                 <div className="min-w-0">
-                  <span className="block text-xs text-[#57534E]">Dose</span>
-                  <span className="font-mono text-sm sm:text-base font-medium tabular-nums text-[#161514]">
+                  <span className="block text-xs text-[#5C534A] dark:text-[#B8AFA4]">
+                    {t.studio.dose}
+                  </span>
+                  <span className="font-mono text-sm sm:text-base font-medium tabular-nums text-[#191614] dark:text-[#F5F0E6]">
                     {recipe.brewRecipe.doseGrams}g
                   </span>
                 </div>
                 <div className="min-w-0">
-                  <span className="block text-xs text-[#57534E]">
-                    Yield / Water
+                  <span className="block text-xs text-[#5C534A] dark:text-[#B8AFA4]">
+                    {t.studio.yieldWater}
                   </span>
-                  <span className="font-mono text-sm sm:text-base font-medium tabular-nums text-[#161514]">
+                  <span className="font-mono text-sm sm:text-base font-medium tabular-nums text-[#191614] dark:text-[#F5F0E6]">
                     {recipe.brewRecipe.waterOrYieldMl}ml
                   </span>
                 </div>
                 <div className="min-w-0">
-                  <span className="block text-xs text-[#57534E]">Ratio</span>
-                  <span className="font-mono text-sm sm:text-base font-medium tabular-nums text-[#161514] break-words">
+                  <span className="block text-xs text-[#5C534A] dark:text-[#B8AFA4]">
+                    {t.studio.ratio}
+                  </span>
+                  <span className="font-mono text-sm sm:text-base font-medium tabular-nums text-[#191614] dark:text-[#F5F0E6] break-words">
                     {recipe.brewRecipe.ratio}
                   </span>
                 </div>
                 <div className="min-w-0">
-                  <span className="block text-xs text-[#57534E]">
-                    Water Temp
+                  <span className="block text-xs text-[#5C534A] dark:text-[#B8AFA4]">
+                    {t.studio.waterTemp}
                   </span>
-                  <span className="font-mono text-sm sm:text-base font-medium tabular-nums text-[#161514]">
+                  <span className="font-mono text-sm sm:text-base font-medium tabular-nums text-[#191614] dark:text-[#F5F0E6]">
                     {recipe.brewRecipe.waterTempC}°C
                   </span>
                 </div>
                 <div className="min-w-0">
-                  <span className="block text-xs text-[#57534E]">Grind</span>
-                  <span className="font-mono text-xs sm:text-sm font-medium text-[#161514] break-words">
+                  <span className="block text-xs text-[#5C534A] dark:text-[#B8AFA4]">
+                    {t.studio.grind}
+                  </span>
+                  <span className="font-mono text-xs sm:text-sm font-medium text-[#191614] dark:text-[#F5F0E6] break-words">
                     {recipe.brewRecipe.grindSetting}
                   </span>
                 </div>
                 <div className="min-w-0">
-                  <span className="block text-xs text-[#57534E]">
-                    Target Time
+                  <span className="block text-xs text-[#5C534A] dark:text-[#B8AFA4]">
+                    {t.studio.targetTime}
                   </span>
-                  <span className="font-mono text-sm sm:text-base font-medium tabular-nums text-[#161514]">
+                  <span className="font-mono text-sm sm:text-base font-medium tabular-nums text-[#191614] dark:text-[#F5F0E6]">
                     {recipe.brewRecipe.brewTime}
                   </span>
                 </div>
@@ -690,6 +714,7 @@ export function CraftingStudio({
                 recipe={recipe}
                 isOpen={isShoppingListOpen}
                 onClose={() => setIsShoppingListOpen(false)}
+                t={t}
               />
 
               <BrewTimer
@@ -697,21 +722,26 @@ export function CraftingStudio({
                 isOpen={isTimerOpen}
                 onClose={() => setIsTimerOpen(false)}
                 sessionKey={timerSessionKey}
+                t={t}
               />
 
               <div className="mt-5 space-y-2.5">
                 {recipe.brewRecipe.steps.map((step, index) => (
                   <div key={index} className="flex items-start gap-3 text-sm">
-                    <span className="font-mono text-xs font-medium tabular-nums text-[#9A3412] pt-0.5 shrink-0">
+                    <span className="font-mono text-xs font-medium tabular-nums text-[#A62C1B] dark:text-[#F59E0B] pt-0.5 shrink-0">
                       0{index + 1}.
                     </span>
-                    <p className="text-[#161514] leading-relaxed">{step}</p>
+                    <p className="text-[#191614] dark:text-[#F5F0E6]/90 leading-relaxed">
+                      {step}
+                    </p>
                   </div>
                 ))}
               </div>
 
-              <p className="mt-4 pt-4 border-t border-[#161514]/10 text-xs leading-relaxed text-[#57534E]">
-                <span className="font-semibold text-[#161514]">Dial-In Tip:</span>{" "}
+              <p className="mt-4 pt-4 border-t border-[#191614]/10 dark:border-white/10 text-xs leading-relaxed text-[#5C534A] dark:text-[#B8AFA4]">
+                <span className="font-semibold text-[#191614] dark:text-[#F5F0E6]">
+                  {t.studio.dialInTip}
+                </span>{" "}
                 {recipe.proTip}
               </p>
             </div>
@@ -720,24 +750,23 @@ export function CraftingStudio({
             <div id="barista-chat" className="pt-6 scroll-mt-16 md:scroll-mt-24">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
                 <div>
-                  <h4 className="font-serif text-xl font-medium text-[#161514]">
-                    Consult Milo
+                  <h4 className="font-serif text-xl font-medium text-[#191614] dark:text-[#F5F0E6]">
+                    {t.studio.consultMilo}
                   </h4>
-                  <p className="text-xs text-[#57534E]">
-                    Ask follow-up questions or tell Milo to modify this recipe
-                    in real time.
+                  <p className="text-xs text-[#5C534A] dark:text-[#B8AFA4]">
+                    {t.studio.consultSubtitle}
                   </p>
                 </div>
               </div>
 
               <div className="flex flex-wrap gap-2 mb-4">
-                {QUICK_PROMPTS.map((promptText) => (
+                {t.studio.quickPrompts.map((promptText) => (
                   <button
                     key={promptText}
                     type="button"
                     disabled={isChatting}
                     onClick={() => onSendChat(promptText)}
-                    className="min-h-[38px] px-3 py-1.5 text-xs font-medium text-[#161514] bg-[#F7F6F3] hover:bg-[#EFECE6] border border-[#161514]/10 rounded-lg transition-colors whitespace-nowrap disabled:opacity-50 cursor-pointer"
+                    className="min-h-[38px] px-3 py-1.5 text-xs font-medium text-[#191614] dark:text-[#F5F0E6] bg-[#F8F5EE] dark:bg-[#26221E] hover:bg-[#EFE9DC] dark:hover:bg-[#312B25] border border-[#191614]/10 dark:border-white/10 rounded-lg transition-colors whitespace-nowrap disabled:opacity-50 cursor-pointer"
                   >
                     {promptText}
                   </button>
@@ -751,23 +780,23 @@ export function CraftingStudio({
                       key={msg.id}
                       className={`p-3.5 rounded-lg text-sm leading-relaxed ${
                         msg.role === "user"
-                          ? "bg-[#161514] text-white ml-3 sm:ml-8"
-                          : "bg-[#F7F6F3] text-[#161514] mr-3 sm:mr-8"
+                          ? "bg-[#191614] dark:bg-[#DC4A33] text-white ml-3 sm:ml-8"
+                          : "bg-[#F8F5EE] dark:bg-[#26221E] text-[#191614] dark:text-[#F5F0E6] mr-3 sm:mr-8"
                       }`}
                     >
                       <div className="flex items-center justify-between gap-2 mb-1">
                         <span
                           className={`text-xs font-semibold ${
                             msg.role === "user"
-                              ? "text-white/75"
-                              : "text-[#9A3412]"
+                              ? "text-white/80"
+                              : "text-[#A62C1B] dark:text-[#F59E0B]"
                           }`}
                         >
-                          {msg.role === "user" ? "You" : "Milo · Head Barista"}
+                          {msg.role === "user" ? t.studio.you : t.studio.miloRole}
                         </span>
                         {msg.recipeUpdated && (
-                          <span className="text-xs font-medium text-[#9A3412]">
-                            Brew sheet updated
+                          <span className="text-xs font-medium text-[#A62C1B] dark:text-[#F59E0B]">
+                            {t.studio.brewSheetUpdated}
                           </span>
                         )}
                       </div>
@@ -775,9 +804,9 @@ export function CraftingStudio({
                     </div>
                   ))}
                   {isChatting && (
-                    <div className="p-3.5 rounded-lg bg-[#F7F6F3] text-sm text-[#57534E] mr-3 sm:mr-8 flex items-center gap-2">
-                      <Loader2 className="w-3.5 h-3.5 animate-spin text-[#9A3412]" />
-                      <span>Milo is dialing in an answer...</span>
+                    <div className="p-3.5 rounded-lg bg-[#F8F5EE] dark:bg-[#26221E] text-sm text-[#5C534A] dark:text-[#B8AFA4] mr-3 sm:mr-8 flex items-center gap-2">
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-[#A62C1B] dark:text-[#F59E0B]" />
+                      <span>{t.studio.miloThinking}</span>
                     </div>
                   )}
                 </div>
@@ -786,7 +815,7 @@ export function CraftingStudio({
               {chatError && (
                 <div
                   role="alert"
-                  className="mb-3 p-3 rounded-lg bg-[#FEF2F2] border border-[#DC2626]/20 text-xs text-[#991B1B]"
+                  className="mb-3 p-3 rounded-lg bg-[#FEF2F2] dark:bg-[#450A0A]/50 border border-[#DC2626]/20 dark:border-[#F87171]/30 text-xs text-[#991B1B] dark:text-[#FCA5A5]"
                 >
                   {chatError}
                 </div>
@@ -798,17 +827,17 @@ export function CraftingStudio({
                   type="text"
                   value={chatDraft}
                   onChange={(e) => setChatDraft(e.target.value)}
-                  placeholder="Ask Milo to swap milk, go iced, or refine grind size..."
+                  placeholder={t.studio.chatPlaceholder}
                   aria-label="Message Milo the barista"
-                  className="flex-1 min-w-0 min-h-[44px] px-3.5 sm:px-4 py-2 text-base sm:text-sm bg-[#F7F6F3] text-[#161514] placeholder:text-[#78716C] border border-[#161514]/15 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9A3412]"
+                  className="flex-1 min-w-0 min-h-[44px] px-3.5 sm:px-4 py-2 text-base sm:text-sm bg-[#F8F5EE] dark:bg-[#26221E] text-[#191614] dark:text-[#F5F0E6] placeholder:text-[#78716C] dark:placeholder:text-[#8E857B] border border-[#191614]/15 dark:border-white/12 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A62C1B] dark:focus:ring-[#F59E0B]"
                 />
                 <button
                   type="submit"
                   disabled={isChatting || !chatDraft.trim()}
-                  className="min-h-[44px] px-4 py-2 text-sm font-semibold text-white bg-[#9A3412] rounded-lg hover:bg-[#7C2D12] disabled:opacity-50 transition-colors inline-flex items-center gap-2 whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9A3412]"
+                  className="min-h-[44px] px-4 py-2 text-sm font-semibold text-white bg-[#A62C1B] dark:bg-[#DC4A33] rounded-lg hover:bg-[#882214] dark:hover:bg-[#C23B26] disabled:opacity-50 transition-colors inline-flex items-center gap-2 whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A62C1B] dark:focus-visible:ring-[#F59E0B]"
                 >
                   <Send className="w-3.5 h-3.5" />
-                  <span>Send</span>
+                  <span>{t.studio.send}</span>
                 </button>
               </form>
             </div>

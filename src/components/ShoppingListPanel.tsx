@@ -1,11 +1,13 @@
 import { useMemo, useState } from "react";
 import { Check, Copy, X } from "lucide-react";
+import { AppTranslations } from "../i18n/translations";
 import { CraftedRecipe } from "../types/coffee";
 
 interface ShoppingListPanelProps {
   recipe: CraftedRecipe;
   isOpen: boolean;
   onClose: () => void;
+  t: AppTranslations;
 }
 
 interface ShoppingListData {
@@ -106,6 +108,7 @@ export function ShoppingListPanel({
   recipe,
   isOpen,
   onClose,
+  t,
 }: ShoppingListPanelProps) {
   const [copied, setCopied] = useState(false);
 
@@ -131,14 +134,14 @@ export function ShoppingListPanel({
   };
 
   return (
-    <div className="mt-5 bg-[#F7F6F3] border border-[#161514]/15 rounded-xl p-4 sm:p-5">
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#161514]/10">
+    <div className="mt-5 bg-[#F8F5EE] dark:bg-[#26221E] border border-[#191614]/15 dark:border-white/12 rounded-xl p-4 sm:p-5">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#191614]/10 dark:border-white/10">
         <div className="min-w-0">
-          <p className="text-xs font-medium text-[#9A3412]">
-            Copy-Paste Grocery &amp; Gear List
+          <p className="text-xs font-medium text-[#A62C1B] dark:text-[#F59E0B]">
+            {t.shopping.title}
           </p>
-          <p className="text-xs text-[#57534E] mt-0.5">
-            Formatted for Apple Notes, Google Keep, or Notion checklists
+          <p className="text-xs text-[#5C534A] dark:text-[#B8AFA4] mt-0.5">
+            {t.shopping.subtitle}
           </p>
         </div>
 
@@ -146,17 +149,17 @@ export function ShoppingListPanel({
           <button
             type="button"
             onClick={handleCopy}
-            className="min-h-[40px] px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-[#161514] hover:bg-[#2C2A28] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9A3412]"
+            className="min-h-[40px] px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-[#191614] dark:bg-[#DC4A33] hover:bg-[#2F2A26] dark:hover:bg-[#C23B26] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A62C1B] dark:focus-visible:ring-[#F59E0B]"
           >
             {copied ? (
               <>
-                <Check className="w-3.5 h-3.5 text-[#F59E0B]" />
-                <span>Copied</span>
+                <Check className="w-3.5 h-3.5 text-[#F59E0B] dark:text-white" />
+                <span>{t.shopping.copied}</span>
               </>
             ) : (
               <>
                 <Copy className="w-3.5 h-3.5" />
-                <span>Copy List</span>
+                <span>{t.shopping.copyList}</span>
               </>
             )}
           </button>
@@ -165,7 +168,7 @@ export function ShoppingListPanel({
             type="button"
             onClick={onClose}
             aria-label="Close shopping list"
-            className="w-10 h-10 rounded-lg bg-white border border-[#161514]/10 text-[#57534E] hover:text-[#161514] flex items-center justify-center transition-colors cursor-pointer"
+            className="w-10 h-10 rounded-lg bg-white dark:bg-[#1C1917] border border-[#191614]/10 dark:border-white/10 text-[#5C534A] dark:text-[#B8AFA4] hover:text-[#191614] dark:hover:text-[#F5F0E6] flex items-center justify-center transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -174,13 +177,15 @@ export function ShoppingListPanel({
 
       <div className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <h4 className="text-xs font-semibold text-[#161514] mb-2.5">
-            Ingredients
+          <h4 className="text-xs font-semibold text-[#191614] dark:text-[#F5F0E6] mb-2.5">
+            {t.shopping.ingredients}
           </h4>
-          <ul className="space-y-2 text-xs leading-relaxed text-[#161514]">
+          <ul className="space-y-2 text-xs leading-relaxed text-[#191614] dark:text-[#F5F0E6]/90">
             {list.ingredients.map((item, idx) => (
               <li key={idx} className="flex items-start gap-2">
-                <span className="font-mono text-[#9A3412] shrink-0">- [ ]</span>
+                <span className="font-mono text-[#A62C1B] dark:text-[#F59E0B] shrink-0">
+                  - [ ]
+                </span>
                 <span>{item}</span>
               </li>
             ))}
@@ -188,13 +193,15 @@ export function ShoppingListPanel({
         </div>
 
         <div>
-          <h4 className="text-xs font-semibold text-[#161514] mb-2.5">
-            Equipment
+          <h4 className="text-xs font-semibold text-[#191614] dark:text-[#F5F0E6] mb-2.5">
+            {t.shopping.equipment}
           </h4>
-          <ul className="space-y-2 text-xs leading-relaxed text-[#161514]">
+          <ul className="space-y-2 text-xs leading-relaxed text-[#191614] dark:text-[#F5F0E6]/90">
             {list.equipment.map((item, idx) => (
               <li key={idx} className="flex items-start gap-2">
-                <span className="font-mono text-[#9A3412] shrink-0">- [ ]</span>
+                <span className="font-mono text-[#A62C1B] dark:text-[#F59E0B] shrink-0">
+                  - [ ]
+                </span>
                 <span>{item}</span>
               </li>
             ))}
@@ -202,12 +209,12 @@ export function ShoppingListPanel({
         </div>
       </div>
 
-      <div className="mt-4 pt-4 border-t border-[#161514]/10">
+      <div className="mt-4 pt-4 border-t border-[#191614]/10 dark:border-white/10">
         <label
           htmlFor="shopping-list-plain"
-          className="block text-xs font-medium text-[#57534E] mb-2"
+          className="block text-xs font-medium text-[#5C534A] dark:text-[#B8AFA4] mb-2"
         >
-          Plain-text preview
+          {t.shopping.plainTextPreview}
         </label>
         <textarea
           id="shopping-list-plain"
@@ -215,7 +222,7 @@ export function ShoppingListPanel({
           value={list.formattedText}
           rows={7}
           onFocus={(e) => e.currentTarget.select()}
-          className="w-full p-3 rounded-lg bg-white border border-[#161514]/10 font-mono text-xs leading-relaxed text-[#161514] focus:outline-none focus:ring-2 focus:ring-[#9A3412] resize-none"
+          className="w-full p-3 rounded-lg bg-white dark:bg-[#1C1917] border border-[#191614]/10 dark:border-white/10 font-mono text-xs leading-relaxed text-[#191614] dark:text-[#F5F0E6] focus:outline-none focus:ring-2 focus:ring-[#A62C1B] dark:focus:ring-[#F59E0B] resize-none"
         />
       </div>
     </div>

@@ -7,34 +7,43 @@ on:
     branches: [main, master]
   workflow_dispatch:
 
-permissions:
-  contents: read
+# Deny all permissions at workflow level; grant minimal read-only per job
+permissions: {}
 
 concurrency:
-  group: verify-${{ github.ref }}
+  group: verify-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
 
 jobs:
   verify:
     name: Typecheck, Build & Server Smoke Test
     runs-on: ubuntu-24.04
     timeout-minutes: 10
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
 
       - name: Set up Node.js 22
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: "22"
 
       - name: Install dependencies
         run: |
+          set -euo pipefail
           if [ -f package-lock.json ]; then
-            npm ci
+            npm ci --no-audit --no-fund
           else
-            npm install
+            npm install --no-audit --no-fund
           fi
 
       - name: TypeScript typecheck
@@ -43,21 +52,35 @@ jobs:
       - name: Production Vite build
         run: npm run build
 
-      - name: Verify build output and static journal JSON
+      - name: Verify build output, static journal JSON & zero-PII hygiene
         run: |
+          set -euo pipefail
           test -f dist/index.html
           test -f dist/data/recipe-journal.json
-          node -e "const j = JSON.parse(require('fs').readFileSync('public/data/recipe-journal.json','utf8')); if (typeof j.version !== 'number' || !Array.isArray(j.entries)) process.exit(1);"
+          node -e '
+            const fs = require("fs");
+            const journal = JSON.parse(fs.readFileSync("public/data/recipe-journal.json", "utf8"));
+            if (typeof journal.version !== "number" || !Array.isArray(journal.entries)) {
+              throw new Error("Invalid recipe-journal.json schema");
+            }
+            for (const entry of journal.entries) {
+              const handle = String(entry.displayHandle || "");
+              if (handle.includes("@") && !handle.startsWith("@") && !handle.includes("***")) {
+                throw new Error("Potential unmasked email detected in displayHandle");
+              }
+            }
+          '
 
       - name: Smoke test production server
         env:
           NODE_ENV: production
         run: |
+          set -euo pipefail
           node server.ts &
           SERVER_PID=$!
-          trap "kill $SERVER_PID 2>/dev/null || true" EXIT
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
 
-          for i in $(seq 1 20); do
+          for _ in $(seq 1 20); do
             if curl -sf http://localhost:3000/ > /dev/null; then
               break
             fi
@@ -70,36 +93,60 @@ jobs:
           test "$HTTP_STATUS" = "200"
 
           # 2. Verify API validation returns structured JSON (400) on empty chat payload
-          CHAT_STATUS=$(curl -s -o /tmp/chat_resp.json -w "%{http_code}" \
+          CHAT_OUT="$RUNNER_TEMP/chat_resp.json"
+          CHAT_STATUS=$(curl -s -o "$CHAT_OUT" -w "%{http_code}" \
             -X POST http://localhost:3000/api/barista/chat \
             -H "Content-Type: application/json" \
             -d '{}')
           echo "POST /api/barista/chat (empty) -> $CHAT_STATUS"
-          cat /tmp/chat_resp.json
+          cat "$CHAT_OUT"
           test "$CHAT_STATUS" = "400"
-          node -e "const d = JSON.parse(require('fs').readFileSync('/tmp/chat_resp.json','utf8')); if (!d.error) process.exit(1);"
+          node -e '
+            const fs = require("fs");
+            const data = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
+            if (!data.error) process.exit(1);
+          ' "$CHAT_OUT"
 
           # 3. Verify missing GEMINI_API_KEY fails cleanly with JSON (500), never HTML
-          CRAFT_STATUS=$(curl -s -o /tmp/craft_resp.json -w "%{http_code}" \
+          CRAFT_OUT="$RUNNER_TEMP/craft_resp.json"
+          CRAFT_STATUS=$(curl -s -o "$CRAFT_OUT" -w "%{http_code}" \
             -X POST http://localhost:3000/api/barista/craft \
             -H "Content-Type: application/json" \
             -d '{"flavors":["Sweet"]}')
           echo "POST /api/barista/craft (no key) -> $CRAFT_STATUS"
-          cat /tmp/craft_resp.json
+          cat "$CRAFT_OUT"
           test "$CRAFT_STATUS" = "500"
-          node -e "const d = JSON.parse(require('fs').readFileSync('/tmp/craft_resp.json','utf8')); if (!d.error) process.exit(1);"
+          node -e '
+            const fs = require("fs");
+            const data = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
+            if (!data.error) process.exit(1);
+          ' "$CRAFT_OUT"
+
+          {
+            echo "### Seggemu KaapiWerk Verification Summary"
+            echo "- TypeScript check: Passed"
+            echo "- Production Vite build: Passed (\`dist/index.html\` & \`dist/data/recipe-journal.json\`)"
+            echo "- \`GET /\`: HTTP \`$HTTP_STATUS\`"
+            echo "- \`POST /api/barista/chat\` validation: HTTP \`$CHAT_STATUS\`"
+            echo "- \`POST /api/barista/craft\` missing-key JSON error: HTTP \`$CRAFT_STATUS\`"
+          } >> "$GITHUB_STEP_SUMMARY"
 
   public-repo-hygiene:
     name: Public Repository Secret & Env Hygiene
     runs-on: ubuntu-24.04
     timeout-minutes: 5
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
 
       - name: Ensure no .env secret files are committed
         run: |
+          set -euo pipefail
           BAD_ENV=$(git ls-files | grep -E '(^|/)\.env(\.|$)' | grep -v '\.env\.example$' || true)
           if [ -n "$BAD_ENV" ]; then
             echo "Found committed .env files:"
@@ -107,8 +154,17 @@ jobs:
             exit 1
           fi
 
+      - name: Ensure Gemini SDK and API keys stay server-side only
+        run: |
+          set -euo pipefail
+          if git grep -nE '@google/genai|GEMINI_API_KEY' -- src/; then
+            echo "Detected server-only Gemini reference inside client src/ directory."
+            exit 1
+          fi
+
       - name: Scan tracked files for hardcoded Google API keys
         run: |
+          set -euo pipefail
           if git grep -nE 'AIza[0-9A-Za-z_-]{35}' -- . ':!package-lock.json'; then
             echo "Potential hardcoded API key detected in tracked files."
             exit 1

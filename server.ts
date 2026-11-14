@@ -55,9 +55,19 @@ function sanitizeInputText(val: unknown, maxLen = 300): string {
     .slice(0, maxLen);
 }
 
-const BARISTA_PERSONA = `You are Milo, Head Barista and Green Buyer at Sable & Origin, a modern third-wave specialty coffee studio.
+const BARISTA_PERSONA = `You are Milo, Head Barista and Green Buyer at Seggemu KaapiWerk (సెగ్గెము ఆకర్ష్ · కాఫీ బారిస్టా), Akarsh Seggemu's Telangana-rooted, Berlin-inspired modern third-wave specialty coffee studio.
 Your vibe is warm, culturally dialed-in, sensory, and genuinely helpful—never pretentious or robotic. You speak like a seasoned specialty barista who knows extraction chemistry, roast development curves, water mineral balance, and plant-milk textural chemistry inside out.
 Give concrete, actionable, and sensory guidance tailored to the guest's flavor preferences, roast profile, bean selection, and milk choice. Keep prose concise and vivid.`;
+
+function getLanguageInstruction(rawLang: unknown): string {
+  if (rawLang === "de") {
+    return "Respond naturally in German (Deutsch) for all prose fields (title, baristaNote, descriptions, steps, tastingNotes, proTip, reply). Keep technical coffee units (g, ml, °C) clear.";
+  }
+  if (rawLang === "te") {
+    return "Respond naturally in Telugu (తెలుగు) using clear everyday Telugu script for all prose fields (baristaNote, descriptions, steps, tastingNotes, proTip, reply), while keeping measurement units (g, ml, °C) readable.";
+  }
+  return "Respond in English.";
+}
 
 const CRAFT_RECIPE_SCHEMA = {
   type: Type.OBJECT,
@@ -397,6 +407,7 @@ async function startServer() {
       const selectedMilk =
         sanitizeInputText(body.selectedMilk, 50) || "Barista Choice";
       const customNote = sanitizeInputText(body.customNote, 300);
+      const langInstruction = getLanguageInstruction(body.language);
 
       const ai = getAiClient(18000);
       const prompt = `Design a tailored specialty coffee craft blueprint for a guest with these preferences:
@@ -409,7 +420,8 @@ async function startServer() {
 - Milk or dairy-free alternative: ${selectedMilk}
 ${customNote ? `- Guest's extra note: "${customNote}"` : ""}
 
-If any parameter says "Barista Choice", choose the single best specialty option to achieve their flavor preferences. If they chose "Black / No Milk" or a filter method where milk isn't typical unless requested, set milkPairing.name to "Black (No Milk)" and explain why clean extraction preserves the aromatics (with steamTempC set to 0). Make all brew measurements mathematically accurate and realistic for specialty coffee. Always include 3 to 4 practical sequential timerPhases (each 5-240 seconds) tailored to the chosen brew method (e.g., 30s bloom, spiral pours, drawdown for pour-over; or extraction, milk steaming, and pouring for espresso drinks).`;
+Language requirement: ${langInstruction}
+If any parameter says "Barista Choice", choose the single best specialty option to achieve their flavor preferences. If they chose "Black / No Milk" or a filter method where milk isn't typical unless requested, set milkPairing.name to "Black (No Milk)" and explain why clean extraction preserves the aromatics (with steamTempC set to 0). Make all brew measurements mathematically accurate and realistic for specialty coffee. Always include 3 to 4 practical sequential timerPhases (each 5-240 seconds) tailored to the chosen brew method (e.g., 30s Bloom, spiral pours, drawdown for pour-over; or extraction, milk steaming, and pouring for espresso drinks).`;
 
       let response;
       try {
@@ -455,7 +467,7 @@ If any parameter says "Barista Choice", choose the single best specialty option 
 
   app.post("/api/barista/chat", async (req, res) => {
     try {
-      const { messages = [], currentRecipe = null } = req.body ?? {};
+      const { messages = [], currentRecipe = null, language = "en" } = req.body ?? {};
       if (!Array.isArray(messages) || messages.length === 0) {
         res
           .status(400)
@@ -485,8 +497,11 @@ If any parameter says "Barista Choice", choose the single best specialty option 
         role: m.role,
         parts: [{ text: m.text }],
       }));
+      const langInstruction = getLanguageInstruction(language);
 
       const contextInstruction = `${BARISTA_PERSONA}
+
+Language requirement: ${langInstruction}
 
 Current active brew sheet in the guest's studio:
 ${currentRecipe ? JSON.stringify(currentRecipe, null, 2) : "No recipe crafted yet."}
@@ -622,7 +637,7 @@ Instructions:
   }
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Sable & Origin studio running on http://localhost:${PORT}`);
+    console.log(`Seggemu KaapiWerk studio running on http://localhost:${PORT}`);
   });
 }
 

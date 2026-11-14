@@ -1,10 +1,14 @@
+import { LanguageCode } from "../i18n/translations";
 import { CraftPreferences, CraftedRecipe } from "../types/coffee";
 
 /**
  * Local barista craft engine used solely as a fallback when the app is hosted
  * on a static host (such as GitHub Pages / github.io) without an API server.
  */
-export function craftStaticRecipe(prefs: CraftPreferences): CraftedRecipe {
+export function craftStaticRecipe(
+  prefs: CraftPreferences,
+  language: LanguageCode = "en"
+): CraftedRecipe {
   const flavors = prefs.flavors.map((f) => f.toLowerCase());
   const note = prefs.customNote.toLowerCase();
   const wantsBright =
@@ -105,11 +109,16 @@ export function craftStaticRecipe(prefs: CraftPreferences): CraftedRecipe {
     title: `${isIced ? "Iced " : ""}${
       wantsDarkCozy ? "Velvet Cacao" : wantsBright ? "Bergamot Blossom" : "Hazelnut Caramel"
     } ${hasMilk ? milkChoice.replace("Barista ", "") + " " : ""}${method}`.trim(),
-    baristaNote: wantsDarkCozy
-      ? `Dialed for rich chocolaty and nutty warmth without harsh bitterness—lowering brew temperature to ${waterTempC}°C and keeping a tight extraction suppresses bitter compounds while highlighting cocoa and toasted nuts.`
-      : `Calibrated around your ${
-          prefs.flavors.join(", ") || "balanced"
-        } notes with ${roastLevel.toLowerCase()} development and ${milkChoice.toLowerCase()} harmony.`,
+    baristaNote:
+      language === "de"
+        ? `Abgestimmt auf ${prefs.flavors.join(", ") || "ausgewogene"} Aromen bei ${waterTempC}°C Brühtemperatur mit ${roastLevel} und ${milkChoice}.`
+        : language === "te"
+        ? `${prefs.flavors.join(", ") || "సమతుల్య"} రుచుల కోసం ${waterTempC}°C నీటి ఉష్ణోగ్రతతో ${roastLevel} మరియు ${milkChoice} తో ప్రత్యేకంగా సిద్ధం చేసిన రెసిపీ.`
+        : wantsDarkCozy
+        ? `Dialed for rich chocolaty and nutty warmth without harsh bitterness—lowering brew temperature to ${waterTempC}°C and keeping a tight extraction suppresses bitter compounds while highlighting cocoa and toasted nuts.`
+        : `Calibrated around your ${
+            prefs.flavors.join(", ") || "balanced"
+          } notes with ${roastLevel.toLowerCase()} development and ${milkChoice.toLowerCase()} harmony.`,
     bean,
     roastProfile: {
       level: roastLevel,
@@ -217,13 +226,14 @@ export function craftStaticRecipe(prefs: CraftPreferences): CraftedRecipe {
 
 export function chatStaticBarista(
   userMessage: string,
-  currentRecipe: CraftedRecipe
+  currentRecipe: CraftedRecipe,
+  language: LanguageCode = "en"
 ): { reply: string; shouldUpdateRecipe: boolean; updatedRecipe?: CraftedRecipe } {
   const lower = userMessage.toLowerCase();
   const next: CraftedRecipe = JSON.parse(JSON.stringify(currentRecipe));
   let updated = false;
 
-  if (lower.includes("iced") || lower.includes("cold")) {
+  if (lower.includes("iced") || lower.includes("cold") || lower.includes("eis") || lower.includes("ఐస్")) {
     next.brewRecipe.servingTemp = "Iced";
     if (!next.title.toLowerCase().includes("iced")) {
       next.title = `Iced ${next.title}`;
@@ -232,28 +242,32 @@ export function chatStaticBarista(
     next.milkPairing.textureStyle = "Chilled pour over clear ice";
     updated = true;
   }
-  if (lower.includes("macadamia")) {
+  if (lower.includes("macadamia") || lower.includes("మకడమియా")) {
     next.milkPairing.name = "Macadamia";
     next.milkPairing.whyItFits =
       "Macadamia milk adds a clean, buttery finish without overshadowing origin sweetness.";
     updated = true;
-  } else if (lower.includes("oat")) {
+  } else if (lower.includes("oat") || lower.includes("hafer") || lower.includes("ఓట్")) {
     next.milkPairing.name = "Barista Oat";
     updated = true;
-  } else if (lower.includes("almond")) {
+  } else if (lower.includes("almond") || lower.includes("mandel") || lower.includes("బాదం")) {
     next.milkPairing.name = "Silky Almond";
     updated = true;
-  } else if (lower.includes("coconut")) {
+  } else if (lower.includes("coconut") || lower.includes("kokos") || lower.includes("కొబ్బరి")) {
     next.milkPairing.name = "Coconut Cream";
     updated = true;
   }
 
-  if (lower.includes("bitter")) {
+  if (lower.includes("bitter") || lower.includes("చేదు")) {
     next.brewRecipe.waterTempC = Math.min(next.brewRecipe.waterTempC, 90);
     updated = true;
     return {
       reply:
-        "To keep dark roasts smooth without bitterness, drop your brew water to 90°C and pull a slightly shorter ratio (around 1:1.6 to 1:1.8). I've updated your brew sheet temperature accordingly.",
+        language === "de"
+          ? "Um Bitterkeit bei dunklen Röstungen zu vermeiden, senke die Wassertemperatur auf 90°C und wähle ein etwas kürzeres Brühverhältnis. Dein Brühblatt ist aktualisiert."
+          : language === "te"
+          ? "చేదు తగ్గించడానికి నీటి ఉష్ణోగ్రతను 90°C కి తగ్గించి, కొద్దిగా తక్కువ నిష్పత్తిలో బ్రూ చేయండి. మీ రెసిపీ అప్‌డేట్ చేయబడింది."
+          : "To keep dark roasts smooth without bitterness, drop your brew water to 90°C and pull a slightly shorter ratio (around 1:1.6 to 1:1.8). I've updated your brew sheet temperature accordingly.",
       shouldUpdateRecipe: updated,
       updatedRecipe: next,
     };
@@ -262,7 +276,11 @@ export function chatStaticBarista(
   if (updated) {
     return {
       reply:
-        "Updated your active brew sheet with those adjustments—check the new temperature and milk texture notes above.",
+        language === "de"
+          ? "Dein aktives Brühblatt wurde mit den gewünschten Anpassungen aktualisiert."
+          : language === "te"
+          ? "మీ సూచనల ప్రకారం ప్రస్తుత కాఫీ రెసిపీ అప్‌డేట్ చేయబడింది."
+          : "Updated your active brew sheet with those adjustments—check the new temperature and milk texture notes above.",
       shouldUpdateRecipe: true,
       updatedRecipe: next,
     };
@@ -270,7 +288,11 @@ export function chatStaticBarista(
 
   return {
     reply:
-      "Great call. Keep your grind consistent, weigh both dose and yield on a 0.1g scale, and stop steaming milk around 59–60°C so natural sweetness stays intact.",
+      language === "de"
+        ? "Gute Idee! Halte den Mahlgrad konstant, wiege Dosis und Ertrag auf 0,1 g genau und schäume Milch nur bis ca. 59–60°C auf."
+        : language === "te"
+        ? "మంచి ఆలోచన! గ్రైండ్ సైజును స్థిరంగా ఉంచి, 0.1g స్కేల్‌పై కొలవండి మరియు పాలను 59–60°C వద్ద ఆపండి."
+        : "Great call. Keep your grind consistent, weigh both dose and yield on a 0.1g scale, and stop steaming milk around 59–60°C so natural sweetness stays intact.",
     shouldUpdateRecipe: false,
   };
 }

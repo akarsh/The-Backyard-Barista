@@ -1,11 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { ArchitectureDiagram } from "./components/ArchitectureDiagram";
+import { BrandLogo } from "./components/BrandLogo";
 import { CraftingStudio } from "./components/CraftingStudio";
+import { FloatingUtilityDock } from "./components/FloatingUtilityDock";
 import { Header } from "./components/Header";
 import { HeroSection } from "./components/HeroSection";
 import { MobileBottomNav } from "./components/MobileBottomNav";
 import { OriginShowcase } from "./components/OriginShowcase";
+import { PochampallyStrip } from "./components/PochampallyStrip";
 import { RecipeJournalSection } from "./components/RecipeJournalSection";
 import { SavedBrewsDrawer } from "./components/SavedBrewsDrawer";
+import { useLanguage } from "./hooks/useLanguage";
+import { useTheme } from "./hooks/useTheme";
 import {
   HERO_IMAGE_URL,
   INITIAL_RECIPE,
@@ -49,6 +55,8 @@ const DEFAULT_PREFERENCES: CraftPreferences = {
 };
 
 export default function App() {
+  const { themeMode, resolvedTheme, setThemeMode } = useTheme();
+  const { language, setLanguage, t } = useLanguage();
   const [preferences, setPreferences] =
     useState<CraftPreferences>(DEFAULT_PREFERENCES);
   const [recipe, setRecipe] = useState<CraftedRecipe>(INITIAL_RECIPE);
@@ -177,18 +185,23 @@ export default function App() {
       const response = await fetch("/api/barista/craft", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(prefs),
+        body: JSON.stringify({ ...prefs, language }),
       });
 
       // Static hosting fallback (GitHub Pages / github.io where no Node API exists)
       if (response.status === 404 || response.status === 405) {
-        const staticRecipe = craftStaticRecipe(prefs);
+        const staticRecipe = craftStaticRecipe(prefs, language);
         setRecipe(staticRecipe);
         setChatMessages([
           {
             id: `milo-${Date.now()}`,
             role: "model",
-            text: `Just dialed in "${staticRecipe.title}" for you. Want me to adjust the milk, switch it over ice, or tweak the grind?`,
+            text:
+              language === "de"
+                ? `Ich habe „${staticRecipe.title}“ für dich abgestimmt. Möchtest du die Milch wechseln, eine Iced-Variante zubereiten oder den Mahlgrad anpassen?`
+                : language === "te"
+                ? `మీ కోసం "${staticRecipe.title}" రెసిపీని సిద్ధం చేశాను. పాలు మార్చాలా, ఐస్డ్ వేరియంట్ కావాలా లేదా గ్రైండ్ సైజును సర్దుబాటు చేయాలా?`
+                : `Just dialed in "${staticRecipe.title}" for you. Want me to adjust the milk, switch it over ice, or tweak the grind?`,
           },
         ]);
         return;
@@ -206,15 +219,32 @@ export default function App() {
           {
             id: `milo-${Date.now()}`,
             role: "model",
-            text: `Just dialed in "${data.recipe.title}" for you. Want me to adjust the milk, switch it over ice, or tweak the grind for your home setup?`,
+            text:
+              language === "de"
+                ? `Ich habe „${data.recipe.title}“ für dich abgestimmt. Möchtest du die Milch wechseln, eine Iced-Variante zubereiten oder den Mahlgrad für dein Setup anpassen?`
+                : language === "te"
+                ? `మీ కోసం "${data.recipe.title}" రెసిపీని సిద్ధం చేశాను. పాలు మార్చాలా, ఐస్డ్ వేరియంట్ కావాలా లేదా మీ హోమ్ సెటప్ కోసం గ్రైండ్ సైజును సర్దుబాటు చేయాలా?`
+                : `Just dialed in "${data.recipe.title}" for you. Want me to adjust the milk, switch it over ice, or tweak the grind for your home setup?`,
           },
         ]);
       }
     } catch (err) {
       // Network failure on pure static hosts falls back cleanly
       if (err instanceof TypeError) {
-        const staticRecipe = craftStaticRecipe(prefs);
+        const staticRecipe = craftStaticRecipe(prefs, language);
         setRecipe(staticRecipe);
+        setChatMessages([
+          {
+            id: `milo-${Date.now()}`,
+            role: "model",
+            text:
+              language === "de"
+                ? `Ich habe „${staticRecipe.title}“ für dich abgestimmt. Möchtest du die Milch wechseln, eine Iced-Variante zubereiten oder den Mahlgrad anpassen?`
+                : language === "te"
+                ? `మీ కోసం "${staticRecipe.title}" రెసిపీని సిద్ధం చేశాను. పాలు మార్చాలా, ఐస్డ్ వేరియంట్ కావాలా లేదా గ్రైండ్ సైజును సర్దుబాటు చేయాలా?`
+                : `Just dialed in "${staticRecipe.title}" for you. Want me to adjust the milk, switch it over ice, or tweak the grind?`,
+          },
+        ]);
         return;
       }
       setCraftError(
@@ -245,11 +275,12 @@ export default function App() {
         body: JSON.stringify({
           messages: nextHistory.map((m) => ({ role: m.role, text: m.text })),
           currentRecipe: recipe,
+          language,
         }),
       });
 
       if (response.status === 404 || response.status === 405) {
-        const staticReply = chatStaticBarista(messageText, recipe);
+        const staticReply = chatStaticBarista(messageText, recipe, language);
         if (staticReply.shouldUpdateRecipe && staticReply.updatedRecipe) {
           setRecipe(staticReply.updatedRecipe);
           setVisualData(null);
@@ -285,7 +316,7 @@ export default function App() {
       setChatMessages((prev) => [...prev, modelMsg]);
     } catch (err) {
       if (err instanceof TypeError) {
-        const staticReply = chatStaticBarista(messageText, recipe);
+        const staticReply = chatStaticBarista(messageText, recipe, language);
         if (staticReply.shouldUpdateRecipe && staticReply.updatedRecipe) {
           setRecipe(staticReply.updatedRecipe);
         }
@@ -513,17 +544,19 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F7F6F3] text-[#161514]">
+    <div className="min-h-screen flex flex-col bg-[#F8F5EE] dark:bg-[#12100E] text-[#191614] dark:text-[#F5F0E6] transition-colors">
       <Header
         savedCount={userEntries.length}
         currentUser={currentUser}
         onOpenSaved={() => setIsDrawerOpen(true)}
+        t={t}
       />
 
       <main className="flex-1">
         <HeroSection
           onStartCrafting={scrollToStudio}
           onFocusBarista={focusBaristaChat}
+          t={t}
         />
 
         <CraftingStudio
@@ -546,6 +579,7 @@ export default function App() {
           chatError={chatError}
           onSendChat={handleSendChat}
           chatInputRef={chatInputRef}
+          t={t}
         />
 
         <RecipeJournalSection
@@ -569,46 +603,80 @@ export default function App() {
           isSyncingGitHub={isSyncingGitHub}
           githubSyncStatus={githubSyncStatus}
           onSyncToGitHub={handleManualSyncToGitHub}
+          t={t}
         />
 
         <OriginShowcase
           onSelectOriginLot={handleSelectOriginLot}
           onSelectRoast={handleSelectRoast}
           onSelectMilk={handleSelectMilk}
+          t={t}
         />
+
+        <ArchitectureDiagram t={t} />
       </main>
 
-      <footer className="border-t border-[#161514]/10 pt-8 pb-24 md:pb-8">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-[#57534E]">
-          <span>Sable &amp; Origin · Specialty Coffee Crafting Studio</span>
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-            <a href="#studio" className="hover:text-[#161514] transition-colors">
-              Studio
+      <footer className="border-t border-[#191614]/10 dark:border-white/10 pb-24 md:pb-10 bg-[#F8F5EE] dark:bg-[#12100E]">
+        <PochampallyStrip />
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-7 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 text-xs text-[#5C534A] dark:text-[#B8AFA4]">
+          <div className="flex items-center gap-3 min-w-0">
+            <BrandLogo className="w-8 h-8 shrink-0" />
+            <div className="space-y-0.5 min-w-0">
+              <p className="font-medium text-[#191614] dark:text-[#F5F0E6]">
+                {t.footer.copyright}
+              </p>
+              <p className="text-[11px] text-[#A62C1B] dark:text-[#F59E0B]">
+                {t.footer.nativeLine}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+            <a
+              href="#studio"
+              className="hover:text-[#191614] dark:hover:text-[#F5F0E6] transition-colors"
+            >
+              {t.nav.studio}
             </a>
             <a
               href="#journal"
-              className="hover:text-[#161514] transition-colors"
+              className="hover:text-[#191614] dark:hover:text-[#F5F0E6] transition-colors"
             >
-              Recipe Journal
+              {t.nav.journal}
             </a>
             <a
               href="#origins"
-              className="hover:text-[#161514] transition-colors"
+              className="hover:text-[#191614] dark:hover:text-[#F5F0E6] transition-colors"
             >
-              Single Origins
+              {t.nav.origins}
+            </a>
+            <a
+              href="#how-it-works"
+              className="hover:text-[#191614] dark:hover:text-[#F5F0E6] transition-colors"
+            >
+              {t.nav.systemMap}
             </a>
             <button
               type="button"
               onClick={() => setIsDrawerOpen(true)}
-              className="hover:text-[#161514] transition-colors cursor-pointer"
+              className="hover:text-[#191614] dark:hover:text-[#F5F0E6] transition-colors cursor-pointer"
             >
-              Quick Drawer
+              {t.footer.quickDrawer}
             </button>
           </div>
         </div>
       </footer>
 
-      <MobileBottomNav />
+      <FloatingUtilityDock
+        language={language}
+        onChangeLanguage={setLanguage}
+        themeMode={themeMode}
+        resolvedTheme={resolvedTheme}
+        onChangeThemeMode={setThemeMode}
+        t={t}
+      />
+
+      <MobileBottomNav t={t} />
 
       <SavedBrewsDrawer
         isOpen={isDrawerOpen}
@@ -622,6 +690,7 @@ export default function App() {
         }}
         onDeleteEntry={handleDeleteEntry}
         onGoToSignIn={scrollToJournal}
+        t={t}
       />
     </div>
   );

@@ -1,8 +1,9 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --font-serif: "Fraunces", Georgia, serif;
-  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: "Plus Jakarta Sans", "Noto Sans Telugu", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 }
 
@@ -10,9 +11,16 @@
   html {
     font-family: var(--font-sans);
     scroll-behavior: smooth;
-    background-color: #F7F6F3;
-    color: #161514;
+    background-color: #F8F5EE;
+    color: #191614;
     overflow-x: clip;
+    color-scheme: light;
+  }
+
+  html.dark {
+    background-color: #12100E;
+    color: #F5F0E6;
+    color-scheme: dark;
   }
 
   body {
