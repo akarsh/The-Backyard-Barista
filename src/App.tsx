@@ -244,8 +244,8 @@ export default function App() {
         applyStaticRecipe(prefs);
         return;
       }
-      console.error("Barista craft request failed; local previews are available.");
-      setCanPreviewLocalBrews(true);
+      console.error("Barista craft request failed; using the local recipe.");
+      applyStaticRecipe(prefs);
     } finally {
       setIsCrafting(false);
     }
